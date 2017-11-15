@@ -1,0 +1,38 @@
+<% if (typeof(isHead) !== 'undefined' && isHead) { %>
+    <% if (theme.plugins.lightgallery) { %>
+        <%- css('https://cdn.bootcss.com/lightgallery/1.6.4/css/lightgallery.min') %>
+    <% } %>
+    <% if (theme.plugins.justifiedgallery) { %>
+        <%- css('libs/justified-gallery/justifiedGallery.min') %>
+    <% } %>
+    <% if (theme.plugins.google_analytics) { %>
+        <%- partial('plugin/google-analytics') %>
+    <% } %>
+    <% if (theme.plugins.google_site_verification) { %>
+        <meta name="google-site-verification" content="<%= theme.plugins.google_site_verification %>" />
+    <% } %>
+    <% if (theme.plugins.baidu_analytics) { %>
+        <%- partial('plugin/baidu-analytics') %>
+    <% } %>
+<% } else { %>
+    <% if (theme.plugins.lightgallery) { %>
+        <%- js('https://cdn.bootcss.com/lightgallery/1.6.4/js/lightgallery.min') %>
+        <%- js('https://cdn.bootcss.com/lightgallery/1.2.21/js/lg-thumbnail.min') %>
+        <%- js('https://cdn.bootcss.com/lightgallery/1.2.20/js/lg-pager.min') %>
+        <%- js('https://cdn.bootcss.com/lightgallery/1.2.19/js/lg-autoplay.min') %>
+        <%- js('https://cdn.bootcss.com/lightgallery/1.2.19/js/lg-fullscreen.min') %>
+        <%- js('https://cdn.bootcss.com/lightgallery/1.2.19/js/lg-zoom.min') %>
+        <%- js('https://cdn.bootcss.com/lightgallery/1.2.18/js/lg-hash.min') %>
+        <%- js('libs/lightgallery/js/lg-share.min') %>
+        <%- js('https://cdn.bootcss.com/lightgallery/1.2.18/js/lg-video.min') %>
+    <% } %>
+    <% if (theme.plugins.justifiedgallery) { %>
+        <%- js('libs/justified-gallery/jquery.justifiedGallery.min') %>
+    <% } %>
+    <% if (theme.plugins.mathjax) { %>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <%- js('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML') %>
+    <% } %>
+<% } %>
