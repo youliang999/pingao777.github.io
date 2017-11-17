@@ -24,7 +24,7 @@ customize:
     highlight: monokai
     sidebar: right # sidebar position, options: left, right or leave it empty
     thumbnail: false # enable posts thumbnail, options: true, false
-    favicon: favicon.ico# path to favicon
+    favicon: favicon.ico # path to favicon
     
     social_link_tooltip: false # enable the social link tooltip, options: true, false
 
