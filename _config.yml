@@ -79,3 +79,8 @@ theme: icarus
 deploy: 
   type: git
   repo: git@github.com:pingao777/pingao777.github.io.git
+
+sitemap: 
+  path: sitemap.xml
+baidusitemap:
+  path: baidusitemap.xml
