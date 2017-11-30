@@ -105,9 +105,9 @@ List l = new ArrayList();
 
 可以把一个“苹果”赋值给“水果”，可以把`ArrayList`赋值给`List`。
 
-#### 5、读写原则
+#### 5、PECS原则
 
-也就是所谓的PECS(Producer Extends, Consumer Super)原则，作为生产者时使用`extends`，作为消费者时使用`super`，这条原则其实是替换原则的推论。
+也就是所谓的Producer Extends, Consumer Super原则，作为生产者时使用`extends`，作为消费者时使用`super`，这条原则其实是替换原则的推论。
 
 ```java
 List<??> list = Arrays.asList(1, 1.3, 5L);
