@@ -11,7 +11,7 @@ tags: [Java, 泛型]
 
 ### 一、泛型是什么
 
-引用Java文档的解释就是，
+引用Java文档的解释，
 
 > A generic type is a generic class or interface that is parameterized over types. 
 
