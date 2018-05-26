@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>统计中的p值 | 瞎说</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="在我看来，假设检验从本质上是一种反证法。当你想证明一样事物是对的，有时候不太好证明，因为一件你以为对的东西可能只是因为你还没发现它错的一面，相反你想证明一件事物是错的就容易多了。在假设检验中，证明备择假设H1存在困难，我们就去证明它的反面原假设H0。">
+<meta name="keywords" content="统计">
+<meta property="og:type" content="article">
+<meta property="og:title" content="统计中的p值">
+<meta property="og:url" content="https://pingao777.github.io/2017/11/14/统计中的p值/index.html">
+<meta property="og:site_name" content="瞎说">
+<meta property="og:description" content="在我看来，假设检验从本质上是一种反证法。当你想证明一样事物是对的，有时候不太好证明，因为一件你以为对的东西可能只是因为你还没发现它错的一面，相反你想证明一件事物是错的就容易多了。在假设检验中，证明备择假设H1存在困难，我们就去证明它的反面原假设H0。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-01-11T14:04:37.305Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="统计中的p值">
+<meta name="twitter:description" content="在我看来，假设检验从本质上是一种反证法。当你想证明一样事物是对的，有时候不太好证明，因为一件你以为对的东西可能只是因为你还没发现它错的一面，相反你想证明一件事物是错的就容易多了。在假设检验中，证明备择假设H1存在困难，我们就去证明它的反面原假设H0。">
+    
+
+    
+
+    
+        <link rel="icon" href="/favicon.ico" />
+    
+
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="https://cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-44085500-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">瞎说</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">时间线</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于我</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">时间线</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于我</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">pingao777</h2>
+            <h3 id="title">Web Developer &amp; Designer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>北京</span>
+            <a id="follow" target="_blank" href="http://github.com/pingao777">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                12
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                17
+                <span>标签</span>
+            </div>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-统计中的p值" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            统计中的p值
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/11/14/统计中的p值/">
+            <time datetime="2017-11-14T02:39:23.000Z" itemprop="datePublished">2017-11-14</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/技术人生/">技术人生</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/统计/">统计</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>在我看来，假设检验从本质上是一种反证法。当你想证明一样事物是对的，有时候不太好证明，因为一件你以为对的东西可能只是因为你还没发现它错的一面，相反你想证明一件事物是错的就容易多了。在假设检验中，证明备择假设H1存在困难，我们就去证明它的反面原假设H0。</p>
+<a id="more"></a>
+<p>p值一直是一个令人迷惑的地方，p值实际上是当H0假设为真，一些极端情况出现的概率。即<br>$$<br>p值 = {极端情况概率|H0}<br>$$</p>
+<p>那么极端情况是什么呢？在H0的前提下，假设样本均值符合正态分布，我们都知道偏离均值3个均方差的概率几乎为0，但是这种情况还是出现了，我们就有理由判断前提条件错了，即H0是错的，由此我们拒绝H0。</p>
+<p>上面提到在正态分布的情况下，偏离均值3个均方差的概率几乎为0，但毕竟不是0，事实上约为0.27%。虽然概率很小，但是还是有一定的可能性会拒绝本是正确的H0，这个犯错概率称为第一类错误，也称为显著性水平$\alpha$。</p>
+<p>那么，这个显著性水平$\alpha$和p值有什么关系呢？在我看来就是拒绝一个真H0所允许的最大错误概率，也就是这种极端情况出现的最高概率，当p小于等于$\alpha$时我们拒绝H0，否则不能拒绝H0。</p>
+<p>在假设检验中，通常的流程为：</p>
+<ol>
+<li>提出原假设和备择假设。</li>
+<li>指定显著性水平$\alpha$，通常取0.01或0.05。</li>
+<li>搜集样本数据计算检验统计量的值。</li>
+<li>利用检验统计量的值计算p值。</li>
+<li>如果p值&lt;=$\alpha$，则拒绝H0，否则不能拒绝H0。</li>
+</ol>
+
+        
+        </div>
+        <footer class="article-footer">
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/11/14/VIM中的正则表达式/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    VIM中的正则表达式
+                
+            </div>
+        </a>
+    
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="valine-thread"></div>
+</section>
+    
+
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术人生/">技术人生</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活生活/">生活生活</a><span class="category-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">10</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/2018/" style="font-size: 10px;">2018</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/alpha-beta/" style="font-size: 10px;">alpha-beta</a> <a href="/tags/minimax/" style="font-size: 10px;">minimax</a> <a href="/tags/五子棋/" style="font-size: 10px;">五子棋</a> <a href="/tags/决策树/" style="font-size: 10px;">决策树</a> <a href="/tags/数据挖掘/" style="font-size: 10px;">数据挖掘</a> <a href="/tags/机器学习/" style="font-size: 20px;">机器学习</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/统计/" style="font-size: 20px;">统计</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a> <a href="/tags/随机森林/" style="font-size: 10px;">随机森林</a>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 pingao777<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/xcss/valine@v1.1.6/dist/Valine.min.js"></script>
+    <script>
+        new Valine({
+            el: '#valine-thread' ,
+            notify:false,
+            verify:false,
+            app_id: '0uUtzN1bmW45lEsXVGDMaekE-gzGzoHsz',
+            app_key: 'SiD0cv45eP3ptV9yXuif6K9V',
+            placeholder: '只会玩白牛.....'
+        });
+    </script>
+
+
+
+
+    
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
