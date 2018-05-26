@@ -1,10 +1,10 @@
 # Menus
 menu:
-  Home: .
-  Archives: archives
-  Categories: categories
-  Tags: tags
-  About: about
+  主页: .
+  时间线: archives
+  分类: categories
+  标签: tags
+  关于我: about
 
 # Customize
 customize:
@@ -19,7 +19,7 @@ customize:
         gravatar: # Gravatar email address, if you enable Gravatar, your avatar config will be overriden
         author: pingao777
         author_title: Web Developer & Designer
-        location: Beijing, China
+        location: 北京
         follow: http://github.com/pingao777
     highlight: monokai
     sidebar: right # sidebar position, options: left, right or leave it empty
