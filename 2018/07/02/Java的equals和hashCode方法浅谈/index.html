@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>Java的equals和hashCode方法浅谈 | 瞎说</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="一、概述equals和hashCode作为Java基础经常在面试中提到，比如下面几个问题： 1、 equals和==有什么区别？2、 equals和hashCode有什么关系？3、 equals和hashCode如何编写？ 对于第一个问题不少人只停留在字符串equals比较的是内容，==比较的是内存地址，而对equals的本质极少过问。第二个问题，大多数都知道答案，也有不少记反了，但是更进一步为什">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java的equals和hashCode方法浅谈">
+<meta property="og:url" content="https://pingao777.github.io/2018/07/02/Java的equals和hashCode方法浅谈/index.html">
+<meta property="og:site_name" content="瞎说">
+<meta property="og:description" content="一、概述equals和hashCode作为Java基础经常在面试中提到，比如下面几个问题： 1、 equals和==有什么区别？2、 equals和hashCode有什么关系？3、 equals和hashCode如何编写？ 对于第一个问题不少人只停留在字符串equals比较的是内容，==比较的是内存地址，而对equals的本质极少过问。第二个问题，大多数都知道答案，也有不少记反了，但是更进一步为什">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ozgrgjwvp.bkt.clouddn.com/Java%E7%9A%84equals%E5%92%8ChashCode%E6%96%B9%E6%B3%95%E6%B5%85%E8%B0%88/hashmap.png">
+<meta property="og:updated_time" content="2018-07-07T08:46:48.534Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java的equals和hashCode方法浅谈">
+<meta name="twitter:description" content="一、概述equals和hashCode作为Java基础经常在面试中提到，比如下面几个问题： 1、 equals和==有什么区别？2、 equals和hashCode有什么关系？3、 equals和hashCode如何编写？ 对于第一个问题不少人只停留在字符串equals比较的是内容，==比较的是内存地址，而对equals的本质极少过问。第二个问题，大多数都知道答案，也有不少记反了，但是更进一步为什">
+<meta name="twitter:image" content="http://ozgrgjwvp.bkt.clouddn.com/Java%E7%9A%84equals%E5%92%8ChashCode%E6%96%B9%E6%B3%95%E6%B5%85%E8%B0%88/hashmap.png">
+    
+
+    
+
+    
+        <link rel="icon" href="/favicon.ico" />
+    
+
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="https://cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-44085500-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">瞎说</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">时间线</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于我</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">时间线</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于我</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">pingao777</h2>
+            <h3 id="title">Web Developer &amp; Designer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>北京</span>
+            <a id="follow" target="_blank" href="http://github.com/pingao777">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                15
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                20
+                <span>标签</span>
+            </div>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-Java的equals和hashCode方法浅谈" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Java的equals和hashCode方法浅谈
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/07/02/Java的equals和hashCode方法浅谈/">
+            <time datetime="2018-07-02T08:20:39.000Z" itemprop="datePublished">2018-07-02</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/技术人生/">技术人生</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Java/">Java</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h3><p><code>equals</code>和<code>hashCode</code>作为Java基础经常在面试中提到，比如下面几个问题：</p>
+<p>1、 <code>equals</code>和<code>==</code>有什么区别？<br>2、 <code>equals</code>和<code>hashCode</code>有什么关系？<br>3、 <code>equals</code>和<code>hashCode</code>如何编写？</p>
+<p>对于第一个问题不少人只停留在字符串<code>equals</code>比较的是内容，<code>==</code>比较的是内存地址，而对<code>equals</code>的本质极少过问。第二个问题，大多数都知道答案，也有不少记反了，但是更进一步为什么是那样的关系，就不知道了。对于第三个问题，大部分人一上手就把方法签名写错了，就别谈正确的写出实现了。带着这些问题，接下来谈谈自己的一点理解。</p>
+<a id="more"></a>
+<h3 id="二、equals方法"><a href="#二、equals方法" class="headerlink" title="二、equals方法"></a>二、equals方法</h3><p>先来看见<code>equals</code>方法的签名，<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (<span class="keyword">this</span> == obj);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到入参是<code>Object</code>，很多人没有注意到这一点，上来就写错了。equals方法顾名思义就判断对象的相等性，默认实现就是<code>==</code>，那么说到二者的区别，个人理解，<code>equals</code>方法是一种用户定义的“逻辑等”，而<code>==</code>是一种“物理等”，用俗语解释就是，<code>equals</code>判断是否相同，<code>==</code>判断是否一样。</p>
+<p><code>equals</code>方法在编写的时候需要遵循以下原则：</p>
+<ul>
+<li>自反性</li>
+<li>对称性</li>
+<li>传递性</li>
+<li>一致性</li>
+</ul>
+<p>下面展开说一下，</p>
+<p>1、自反性的意思是，对于一个非<code>null</code>的对象x，<code>x.equals(x)</code>一定为<code>true</code>，这是显而易见的，无须赘述。</p>
+<p>2、对称性，对于非<code>null</code>对象x、y，<code>x.equals(y) == true</code>，当且仅当<code>y.equals(x) == true</code>。来看一个来自《Effective Java》的例子，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Broken - violates symmetry!</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">CaseInsensitiveString</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> String s;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">CaseInsensitiveString</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.s = Objects.requireNonNull(s);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Broken - violates symmetry!</span></span><br><span class="line">  <span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (o <span class="keyword">instanceof</span> CaseInsensitiveString)</span><br><span class="line">      <span class="keyword">return</span> s.equalsIgnoreCase(</span><br><span class="line">          ((CaseInsensitiveString) o).s);</span><br><span class="line">    <span class="keyword">if</span> (o <span class="keyword">instanceof</span> String)  <span class="comment">// One-way interoperability!</span></span><br><span class="line">      <span class="keyword">return</span> s.equalsIgnoreCase((String) o);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  ...  <span class="comment">// Remainder omitted</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">CaseInsensitiveString cis = <span class="keyword">new</span> CaseInsensitiveString(<span class="string">"Polish"</span>);</span><br><span class="line">String s = <span class="string">"polish"</span>;</span><br><span class="line">List&lt;CaseInsensitiveString&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">list.add(cis);</span><br><span class="line"><span class="comment">// true or false</span></span><br><span class="line">list.contains(s);</span><br><span class="line">`</span><br></pre></td></tr></table></figure>
+<p>在JDK8运行<code>list.contains(s)</code>返回<code>false</code>，但是有的JDK可能会返回<code>true</code>，甚至直接崩溃，所以如果违反了对称性，程序的行为是不可预测的。</p>
+<p>3、传递性，对于非<code>null</code>对象x、y、z，如果<code>x.equals(y) == true</code>且<code>y.equals(z) == true</code>，那么<code>x.equals(z) == true</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Point</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> x;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> y;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Point</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.x = x;</span><br><span class="line">    <span class="keyword">this</span>.y = y;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!(o <span class="keyword">instanceof</span> Point))</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    Point p = (Point)o;</span><br><span class="line">    <span class="keyword">return</span> p.x == x &amp;&amp; p.y == y;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ...  <span class="comment">// Remainder omitted</span></span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ColorPoint</span> <span class="keyword">extends</span> <span class="title">Point</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> Color color;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">ColorPoint</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y, Color color)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>(x, y);</span><br><span class="line">    <span class="keyword">this</span>.color = color;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Broken - violates transitivity!</span></span><br><span class="line">  <span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!(o <span class="keyword">instanceof</span> Point))</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// If o is a normal Point, do a color-blind comparison</span></span><br><span class="line">    <span class="keyword">if</span> (!(o <span class="keyword">instanceof</span> ColorPoint))</span><br><span class="line">      <span class="keyword">return</span> o.equals(<span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// o is a ColorPoint; do a full comparison</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.equals(o) &amp;&amp; ((ColorPoint) o).color == color;</span><br><span class="line">  &#125; </span><br><span class="line"></span><br><span class="line">  ...  <span class="comment">// Remainder omitted</span></span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">ColorPoint p1 = <span class="keyword">new</span> ColorPoint(<span class="number">1</span>, <span class="number">2</span>, Color.RED);</span><br><span class="line">Point p2 = <span class="keyword">new</span> Point(<span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line">ColorPoint p3 = <span class="keyword">new</span> ColorPoint(<span class="number">1</span>, <span class="number">2</span>, Color.BLUE);</span><br></pre></td></tr></table></figure>
+<p>显然这个实现违反了传递性，<code>p1.equals(p2) == p2.equals(p3) != p1.equals(p3)</code>。假如<code>Point</code>有两个子类<code>ColorPoint</code>和<code>SmellPoint</code>，<code>colorPoint.equals(smellPoint)</code>将会导致无限递归，最终导致内存耗尽。引用《Effective Java》的说法，</p>
+<blockquote>
+<p>There is no way to extend an instantiable class and add a value component while preserving the equals contract, unless you’re willing to forgo the benefits of object-oriented abstraction. </p>
+</blockquote>
+<p>这句话的大意是如果你继承扩展一个类，就没法再保持<code>equals</code>的原则了，除非放弃使用继承。放弃继承？这不是让我们因噎废食嘛，咦，别说，还真能放弃继承，那就是组合，因为本文的重点是<code>equals</code>和<code>hashCode</code>就不展开了。</p>
+<p>4、一致性，对于非<code>null</code>对象x、y，多次调用<code>x.equals(y)</code>返回一致。一致性意味着<code>equals</code>方法不要依赖不可靠的变量，这里“可靠”的意思不光意味着“不该变时不变”，还意味着“想获取时能获取到”，比如<code>java.net.URL</code>的<code>equals</code>实现依赖了ip地址，而网络故障时无法获取ip，这是一个不好的实现。</p>
+<p>说了那么多，有人可能会说，哎呀这么多原则顾头不顾尾，都要满足，太难了吧，下面列出实现<code>equals</code>的一些tips，照着做实现起来就易如反掌，<br>1、使用<code>==</code>判断是否为<code>null</code>或<code>this</code>，如果是前者返回<code>false</code>，后者就返回<code>true</code>。<br>2、使用<code>instanceof</code>检测是否是正确的类型，如果不是直接返回<code>false</code>，如果是，强制转换为正确的类型，然后比较与“逻辑等”相关的变量。</p>
+<h3 id="三、hashCode方法"><a href="#三、hashCode方法" class="headerlink" title="三、hashCode方法"></a>三、hashCode方法</h3><p><code>hashCode</code>主要用来在Java中哈希数据结构<code>HashMap</code>、<code>HashSet</code>生成哈希值，<code>hashCode</code>的方法签名，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+<p>默认实现会将对象的内存地址转化为一个整数，因此只有同一个对象<code>hashCode</code>才一样，即使两个<code>equals</code>返回<code>true</code>的对象<code>hashCode</code>也不一样，如果不进行重写。</p>
+<p>和<code>equals</code>一样，<code>hashCode</code>也需要满足一些原则，</p>
+<p>1、一致性，和<code>equals</code>相关的变量没有变化，<code>hashCode</code>返回值也不能变化。</p>
+<p>2、两个对象<code>equals</code>返回<code>true</code>，<code>hashCode</code>返回值应该相等。由上面得知，<code>hashCode</code>默认实现不满足这一条件，因此任何类如果实现了<code>equals</code>就必须实现<code>hashCode</code>，确保二者的步调一致，下面来看一个反例，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">  <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(<span class="keyword">int</span> age, String name)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.age = age;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (obj == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (obj == <span class="keyword">this</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> Person) &#123;</span><br><span class="line">        Person that = (Person) obj;</span><br><span class="line">        <span class="keyword">return</span> age == that.age &amp;&amp; Objects.equals(name, that.name);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Map&lt;Person, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">map.put(<span class="keyword">new</span> Person(<span class="number">10</span>, <span class="string">"小明"</span>), <span class="number">1</span>);</span><br><span class="line">map.get(<span class="keyword">new</span> Person(<span class="number">10</span>, <span class="string">"小明"</span>));</span><br></pre></td></tr></table></figure>
+<p>初学者可能觉得最后一条语句会返回1，事实上返回的是<code>null</code>，为什么会这样呢？明明将数据放进去了，而数据却像被黑洞吞噬一样，要解释得从<code>HashMap</code>的数据结构说起，<code>HashMap</code>是由数组和链表组成的一种组合结构，如下图，往里存放时，<code>hashCode</code>决定数组的下标，而<code>equals</code>用于查找值是否已存在，存在的话替换，否则插入；往外取时，先用<code>hashCode</code>找到对应数组下标，然后用<code>equals</code>挨个比较直到链表的尾部，找到返回相应值，找不到返回null。再回过头看刚才的问题，先放进去一个<code>new Person(10, &quot;小明&quot;)</code>，然后取的时候又<code>new Person(10, &quot;小明&quot;)</code>，由于没有重写<code>hashCode</code>，这两个对象的<code>hashCode</code>是不一样的，存和取的数组下标也就不一样，自然取不出来了。</p>
+<p><img src="http://ozgrgjwvp.bkt.clouddn.com/Java%E7%9A%84equals%E5%92%8ChashCode%E6%96%B9%E6%B3%95%E6%B5%85%E8%B0%88/hashmap.png" alt="HashMap数据结构"></p>
+<p>3、两个对象<code>equals</code>返回<code>false</code>，<code>hashCode</code>返回值可以相等，但是如果不等的话，可以改进哈希数据结构的性能。这条原则也可以用<code>HashMap</code>的数据结构解释，举一个极端的例子，假如<code>Person</code>所有对象的<code>hashCode</code>都一样，那么<code>HashMap</code>内部数组的下标都一样，数据就会进到同一张链表里，这张链表比正常情况下要长的多，而遍历链表是一项耗时的工作，性能也就下来了。</p>
+<p>那么如何写一个好的<code>hashCode</code>呢？</p>
+<p>1、声明一个变量<code>int</code>的变量<code>result</code>，将第一个和<code>equals</code>相关的实例变量的<code>hashCode</code>赋值给它。<br>2、然后依次计算剩下的实例变量的<code>hashCode</code>值<code>c</code>。<br>（a） 如果是null，设置一个常数，通常为0<br>（b） 如果是原始类型，使用<code>Type.hashCode(f)</code>，<code>Type</code>为它们的装箱类型<br>（c） 如果是数组，如果每一个元素都是相关的，可以使用<code>Arrays.hashCode</code>；否则将相关元素看作独立的变量计算<br>3、使用<code>result = 31 * result + c</code>的形式将每个变量的哈希值组合起来，最后返回<code>result</code>。</p>
+<p>参考资料：《Effective Java》</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2018/06/25/侏罗纪下一部可以叫做We-are-family/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">侏罗纪下一部可以叫做We are family</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="valine-thread"></div>
+</section>
+    
+
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术人生/">技术人生</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活生活/">生活生活</a><span class="category-list-count">2</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">10</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/2018/" style="font-size: 10px;">2018</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/alpha-beta/" style="font-size: 10px;">alpha-beta</a> <a href="/tags/minimax/" style="font-size: 10px;">minimax</a> <a href="/tags/五子棋/" style="font-size: 10px;">五子棋</a> <a href="/tags/侏罗纪公园/" style="font-size: 10px;">侏罗纪公园</a> <a href="/tags/决策树/" style="font-size: 10px;">决策树</a> <a href="/tags/数据挖掘/" style="font-size: 10px;">数据挖掘</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/机器学习/" style="font-size: 20px;">机器学习</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/统计/" style="font-size: 20px;">统计</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a> <a href="/tags/随机森林/" style="font-size: 10px;">随机森林</a>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 pingao777<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/xcss/valine@v1.1.6/dist/Valine.min.js"></script>
+    <script>
+        new Valine({
+            el: '#valine-thread' ,
+            notify:false,
+            verify:false,
+            app_id: '0uUtzN1bmW45lEsXVGDMaekE-gzGzoHsz',
+            app_key: 'SiD0cv45eP3ptV9yXuif6K9V',
+            placeholder: '只会玩白牛.....'
+        });
+    </script>
+
+
+
+
+    
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
