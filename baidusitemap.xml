@@ -4,11 +4,11 @@
 
     
   <url>
-    <loc>https://pingao777.github.io/2018/07/29/%E5%86%99%E4%BA%86%E4%B8%80%E4%B8%AAVim%E9%A2%84%E8%A7%88%E6%8F%92%E4%BB%B6%E6%AC%A2%E8%BF%8E%E4%BD%BF%E7%94%A8/</loc>
-    <lastmod>2018-07-29T03:30:08.429Z</lastmod>
+    <loc>https://pingao777.github.io/2018/07/29/Vim%20Markdown%E9%A2%84%E8%A7%88%E6%8F%92%E4%BB%B6markdown-preview-sync/</loc>
+    <lastmod>2018-07-29T06:37:51.153Z</lastmod>
     <data>
         <display>
-        <title>写了一个Vim预览插件欢迎使用</title>
+        <title>Vim Markdown预览插件markdown-preview-sync</title>
         <pubTime>2018-07-29T02:24:06.000Z</pubTime>
         
         <tag>Vim</tag>
@@ -218,18 +218,16 @@
 
     
   <url>
-    <loc>https://pingao777.github.io/2017/11/16/%E5%BD%93Python%E5%92%8CR%E9%81%87%E4%B8%8A%E5%8C%97%E4%BA%AC%E4%BA%8C%E6%89%8B%E6%88%BF%EF%BC%88%E4%B8%8B%EF%BC%89/</loc>
+    <loc>https://pingao777.github.io/2017/11/28/%E6%B5%85%E8%B0%88Java%E6%B3%9B%E5%9E%8B/</loc>
     <lastmod>2018-01-11T14:00:11.204Z</lastmod>
     <data>
         <display>
-        <title>当Python和R遇上北京二手房（下）</title>
-        <pubTime>2017-11-16T13:50:42.000Z</pubTime>
+        <title>浅谈Java泛型</title>
+        <pubTime>2017-11-28T03:03:16.000Z</pubTime>
         
-        <tag>R</tag>
+        <tag>Java</tag>
          
-        <tag>Python</tag>
-         
-        <tag>统计</tag>
+        <tag>泛型</tag>
          
          
            
@@ -242,16 +240,40 @@
 
     
   <url>
-    <loc>https://pingao777.github.io/2017/11/16/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/</loc>
+    <loc>https://pingao777.github.io/2017/11/16/%E4%BB%96%E4%BB%AC%E5%BE%81%E5%8F%8B%EF%BC%88%E5%A9%9A%EF%BC%89%E6%97%B6%EF%BC%8C%E4%BB%96%E4%BB%AC%E5%BE%81%E4%BB%80%E4%B9%88%EF%BC%9F/</loc>
     <lastmod>2018-01-11T14:00:11.204Z</lastmod>
     <data>
         <display>
-        <title>大道至简：朴素贝叶斯分类器</title>
-        <pubTime>2017-11-16T13:41:58.000Z</pubTime>
+        <title>他们征友（婚）时，他们征什么？</title>
+        <pubTime>2017-11-16T13:36:30.000Z</pubTime>
         
-        <tag>机器学习</tag>
+        <tag>数据挖掘</tag>
          
-        <tag>贝叶斯</tag>
+        <tag>R</tag>
+         
+         
+           
+             
+              <breadCrumb title="技术人生" url="https://pingao777.github.io/categories/%E6%8A%80%E6%9C%AF%E4%BA%BA%E7%94%9F/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://pingao777.github.io/2017/11/16/%E5%BD%93Python%E5%92%8CR%E9%81%87%E4%B8%8A%E5%8C%97%E4%BA%AC%E4%BA%8C%E6%89%8B%E6%88%BF%EF%BC%88%E4%B8%8B%EF%BC%89/</loc>
+    <lastmod>2018-01-11T14:00:11.204Z</lastmod>
+    <data>
+        <display>
+        <title>当Python和R遇上北京二手房（下）</title>
+        <pubTime>2017-11-16T13:50:42.000Z</pubTime>
+        
+        <tag>R</tag>
+         
+        <tag>Python</tag>
+         
+        <tag>统计</tag>
          
          
            
@@ -288,28 +310,6 @@
 
     
   <url>
-    <loc>https://pingao777.github.io/2017/11/16/%E4%BB%96%E4%BB%AC%E5%BE%81%E5%8F%8B%EF%BC%88%E5%A9%9A%EF%BC%89%E6%97%B6%EF%BC%8C%E4%BB%96%E4%BB%AC%E5%BE%81%E4%BB%80%E4%B9%88%EF%BC%9F/</loc>
-    <lastmod>2018-01-11T14:00:11.204Z</lastmod>
-    <data>
-        <display>
-        <title>他们征友（婚）时，他们征什么？</title>
-        <pubTime>2017-11-16T13:36:30.000Z</pubTime>
-        
-        <tag>数据挖掘</tag>
-         
-        <tag>R</tag>
-         
-         
-           
-             
-              <breadCrumb title="技术人生" url="https://pingao777.github.io/categories/%E6%8A%80%E6%9C%AF%E4%BA%BA%E7%94%9F/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>https://pingao777.github.io/2017/11/16/%E7%AE%80%E6%B4%81%E9%AB%98%E6%95%88%E7%9A%84Boyer-Moore%E7%AE%97%E6%B3%95/</loc>
     <lastmod>2018-01-11T14:00:11.204Z</lastmod>
     <data>
@@ -333,16 +333,16 @@
     
     
   <url>
-    <loc>https://pingao777.github.io/2017/11/28/%E6%B5%85%E8%B0%88Java%E6%B3%9B%E5%9E%8B/</loc>
+    <loc>https://pingao777.github.io/2017/11/16/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/</loc>
     <lastmod>2018-01-11T14:00:11.204Z</lastmod>
     <data>
         <display>
-        <title>浅谈Java泛型</title>
-        <pubTime>2017-11-28T03:03:16.000Z</pubTime>
+        <title>大道至简：朴素贝叶斯分类器</title>
+        <pubTime>2017-11-16T13:41:58.000Z</pubTime>
         
-        <tag>Java</tag>
+        <tag>机器学习</tag>
          
-        <tag>泛型</tag>
+        <tag>贝叶斯</tag>
          
          
            
