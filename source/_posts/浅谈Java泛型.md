@@ -13,7 +13,7 @@ tags: [Java, 泛型]
 
 引用Java文档的解释，
 
-> A generic type is a generic class or interface that is parameterized over types. 
+> A generic type is a generic class or interface that is parameterized over types.
 
 大致的意思就是类型经过参数化的类或接口。
 
@@ -168,11 +168,3 @@ class Collections {
 ### 五、最后说几句
 
 Java的泛型远不止这些内容，文中只是我个人使用泛型中比较困惑的点，可能有些地方理解的也不是那么透彻和准确，还请不吝赐教。
-
-
-
-
-
-
-
-
