@@ -7,13 +7,13 @@ tags: [Markdown, Java, Vim, Python]
 
 Java一直以来都给人留下了笨重的印象，按说插件这种轻量的任务根本和Java没啥关系，但是这次我要霸王硬上弓，让大象跳次舞。
 
-跳什么舞呢？这是个问题，突然想起写博客一直困扰自己的一个问题：我一直使用Vim编写Markdown，有时候难免想看看效果，欣赏下文字跳动的样子，但是Vim不支持预览，自己一直用Chrome一款插件[Markdown Viewer](https://chrome.google.com/webstore/detail/markdown-viewer/ckkdlimhmcjmikdlpkmbgfkaikojcbjk)进行预览，但是这款插件不支持动态刷新也不支持同步滚动，所以如果你没有一下点出十个信号的手速，这个操作是比较尴尬的。既然这样，能不能用Java整个插件呢？
+跳什么舞呢？这是个问题，突然想起写博客一直困扰自己的一个问题：我一直使用Vim编写Markdown，有时候难免想看看效果，欣赏下文字跳动的样子，但是Vim不支持预览，自己一直用Chrome一款插件[Markdown Viewer](https://chrome.google.com/webstore/detail/markdown-viewer/ckkdlimhmcjmikdlpkmbgfkaikojcbjk)进行预览，遗憾的是这款插件不支持动态刷新也不支持同步滚动，所以如果你没有一下点出十个信号的手速，这个操作是比较尴尬的。既然这样，能不能用Java整个插件呢？
 
 <!--more-->
 
 ### 整体思路
 
-既然现在Markdown Viewer只能显示不能滚动，那么通过程序将Vim的某种位置信息传给浏览器，然后调用js滚动到这个位置不就可以了吗？既然想让浏览器显示网页而且网页的内容还得不停的变，需要一个Web服务器，这正是Java的强项。从浏览器到Java的路走通了，但是Vim到Java的路怎么走呢？由于Vim不支持Java，二者怎么通信呢，这时看到著名的胶水语言，编程语言界的媒婆Python是被Vim支持的，n那么方案有了：让Python与Java通信。好，这样整个流程就通了。整体框架如下所示：
+既然现在Markdown Viewer只能显示不能滚动，那么通过程序将Vim的某种位置信息传给浏览器，然后调用js滚动到这个位置不就可以了吗？想让浏览器显示网页而且网页的内容还得不停的变，需要一个Web服务器，这正是Java的强项。从浏览器到Java的路走通了，但是Vim到Java的路怎么走呢？由于Vim不支持Java，二者怎么通信呢，这时看到著名的胶水语言，编程语言界的媒婆Python是被Vim支持的，方案有了：让Python与Java通信。好，这样整个流程就通了。整体框架如下所示：
 
 ![architecture](http://ozgrgjwvp.bkt.clouddn.com/%E8%B0%81%E8%AF%B4%E5%A4%A7%E8%B1%A1%E4%B8%8D%E8%83%BD%E8%B7%B3%E8%88%9E%EF%BC%9A%E5%9F%BA%E4%BA%8EJava%E7%9A%84Markdown%E9%A2%84%E8%A7%88%E6%8F%92%E4%BB%B6/architecture.png)
 
@@ -250,7 +250,7 @@ $.each(units, function (i, u) {
 
 #### 本地图片不显示
 
-由于浏览器安全策略的限制，页面的img标签不能打开本地图片，即形如`<img src='D:\path-to-img.jpg'/>`这种写法浏览器不会加载图片，而是提示“Not allowed to load local resource”。一般在文章未发布到网上时，图片地址往往写一个本地的绝对路径，如果不能显示本地图片的话将会大大影响方便性。那么该怎么办呢，第一种方法时写相对路径，即`<img src='/path-to-img.jpg'/>`，这种方式有很大的局限性，即必须将图片放在一个位置，与网页呈一种相对关系；另一种是写的时候还是写绝对路径，经过程序转成服务器地址，然后通过服务器将图片返给浏览器。显然第二种方式更加灵活，核心代码如下：
+由于浏览器安全策略的限制，页面的img标签不能打开本地图片，即形如`<img src='D:\path-to-img.jpg'/>`这种写法浏览器不会加载图片，而是提示“Not allowed to load local resource”。一般在文章未发布到网上时，图片地址往往写一个本地的绝对路径，如果不能显示本地图片的话将会大大影响方便性。那么该怎么办呢，第一种方法是写相对路径，即`<img src='/path-to-img.jpg'/>`，这种方式有很大的局限性，即必须将图片放在一个位置，与网页呈一种相对关系；另一种是写的时候还是写绝对路径，经过程序转成服务器地址，然后通过服务器将图片返给浏览器。显然第二种方式更加灵活，核心代码如下：
 
 ```java
 private static void transformLocalImgSrc(Element element) {
@@ -273,6 +273,12 @@ private static void transformLocalImgSrc(Element element) {
 ### 阳光总在风雨后
 
 尽管经过了一些风雨，最后还是看到胜利的曙光了。这个项目够小，涵盖的语言和知识并不少，作为一个练手的项目还是不错的，如果碰巧还能给生活提供点便利，何乐而不为呢？想了解大象跳舞的更多细节请戳[github](https://github.com/pingao777/markdown-preview-sync)。
+
+效果如下：
+
+![snapshot-ch](http://ozgrgjwvp.bkt.clouddn.com/markdown-preview-sync/ch.png)
+
+![snapshot-en](http://ozgrgjwvp.bkt.clouddn.com/markdown-preview-sync/en.png)
 
 参考资料：
 
