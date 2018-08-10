@@ -18,14 +18,14 @@ customize:
         avatar: css/images/avatar.png
         gravatar: # Gravatar email address, if you enable Gravatar, your avatar config will be overriden
         author: pingao777
-        author_title: Web Developer & Designer
-        location: 北京
+        author_title: Web Developer
+        location: Beijing
         follow: http://github.com/pingao777
     highlight: monokai
     sidebar: right # sidebar position, options: left, right or leave it empty
     thumbnail: false # enable posts thumbnail, options: true, false
     favicon: favicon.ico # path to favicon
-    
+
     social_link_tooltip: false # enable the social link tooltip, options: true, false
 
 # Widgets
@@ -64,7 +64,7 @@ comment:
         notify: false # enter true to enable <Mail notifier> https://github.com/xCss/Valine/wiki/Valine-%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E9%82%AE%E4%BB%B6%E6%8F%90%E9%86%92%E8%AE%BE%E7%BD%AE
         verify: false # enter true to enable <Validation code>
         placeholder: 只会玩白牛..... # enter the comment box placeholder
-    
+
 
 # Share
 share: default # options: jiathis, bdshare, addtoany, default
