@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>加密和解密 | 瞎说</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="最近学习HTTPS的知识，涉及了一些加密和解密的内容，在Mozilla MDN上找到一篇文章Encryption and Decryption，清晰明了，特地翻译一下，与大家分享。 加密（Encryption ）是将原始信息转化为对其他用户非明了信息的过程，除非信息的接受者；解密（Decryption）是将非明了信息转化为原始数据的过程。加密算法，也称作密码（cipher， 注：与传统意义上的密码">
+<meta name="keywords" content="加密,解密">
+<meta property="og:type" content="article">
+<meta property="og:title" content="加密和解密">
+<meta property="og:url" content="https://pingao777.github.io/2018/08/17/加密和解密/index.html">
+<meta property="og:site_name" content="瞎说">
+<meta property="og:description" content="最近学习HTTPS的知识，涉及了一些加密和解密的内容，在Mozilla MDN上找到一篇文章Encryption and Decryption，清晰明了，特地翻译一下，与大家分享。 加密（Encryption ）是将原始信息转化为对其他用户非明了信息的过程，除非信息的接受者；解密（Decryption）是将非明了信息转化为原始数据的过程。加密算法，也称作密码（cipher， 注：与传统意义上的密码">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ozgrgjwvp.bkt.clouddn.com/%E5%8A%A0%E5%AF%86%E5%92%8C%E8%A7%A3%E5%AF%86/1-symmetric-key%20encryption.png">
+<meta property="og:image" content="http://ozgrgjwvp.bkt.clouddn.com/%E5%8A%A0%E5%AF%86%E5%92%8C%E8%A7%A3%E5%AF%86/2-public-key%20encryption.png">
+<meta property="og:updated_time" content="2018-08-18T07:32:22.713Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="加密和解密">
+<meta name="twitter:description" content="最近学习HTTPS的知识，涉及了一些加密和解密的内容，在Mozilla MDN上找到一篇文章Encryption and Decryption，清晰明了，特地翻译一下，与大家分享。 加密（Encryption ）是将原始信息转化为对其他用户非明了信息的过程，除非信息的接受者；解密（Decryption）是将非明了信息转化为原始数据的过程。加密算法，也称作密码（cipher， 注：与传统意义上的密码">
+<meta name="twitter:image" content="http://ozgrgjwvp.bkt.clouddn.com/%E5%8A%A0%E5%AF%86%E5%92%8C%E8%A7%A3%E5%AF%86/1-symmetric-key%20encryption.png">
+    
+
+    
+
+    
+        <link rel="icon" href="/favicon.ico" />
+    
+
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="https://cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-44085500-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">瞎说</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">时间线</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于我</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">时间线</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于我</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">pingao777</h2>
+            <h3 id="title">Web Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Beijing</span>
+            <a id="follow" target="_blank" href="http://github.com/pingao777">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                21
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                26
+                <span>标签</span>
+            </div>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-加密和解密" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            加密和解密
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/08/17/加密和解密/">
+            <time datetime="2018-08-17T08:04:11.000Z" itemprop="datePublished">2018-08-17</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/技术人生/">技术人生</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/加密/">加密</a>, <a class="tag-link" href="/tags/解密/">解密</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>最近学习HTTPS的知识，涉及了一些加密和解密的内容，在Mozilla MDN上找到一篇文章<em><a href="https://developer.mozilla.org/en-US/docs/Archive/Security/Encryption_and_Decryption" target="_blank" rel="external">Encryption and Decryption</a></em>，清晰明了，特地翻译一下，与大家分享。</p>
+<p><strong>加密（Encryption ）</strong>是将原始信息转化为对其他用户非明了信息的过程，除非信息的接受者；<strong>解密（Decryption）</strong>是将非明了信息转化为原始数据的过程。加密算法，也称作<strong>密码</strong>（cipher， 注：与传统意义上的密码不同），是一种用来加密和解密的数学函数。在大多数情况下，会同时采用两个相关的函数，一个用作加密，另一个用作解密。</p>
+<p>当今的大多数加密技术保持信息私密并不依靠算法本身，因为算法都是众所周知的，而是依靠加密和解密的<strong>密钥（key）</strong>。使用正确的密钥进行解密轻而易举，而使用不正确的密钥想进行解密是非常困难的，在某些实际情况下，可以说是不可能的。</p>
+<p>本篇文章将从下面三个方面介绍密钥在加密和解密中的用处：</p>
+<ul>
+<li><p><strong>对称密钥加密（Symmetric-Key Encryption）</strong></p>
+</li>
+<li><p><strong>公钥加密（Public-Key Encryption，也称作非对称密钥加密）</strong></p>
+</li>
+<li><p>密钥长度和加密强度</p>
+</li>
+</ul>
+<a id="more"></a>
+<h3 id="对称密钥加密"><a href="#对称密钥加密" class="headerlink" title="对称密钥加密"></a>对称密钥加密</h3><p>在对称密钥加密中，加密密钥可以由解密密钥推知，反之亦然。事实上，在很多情况下，二者是相同的，如下图所示。</p>
+<p><img src="http://ozgrgjwvp.bkt.clouddn.com/%E5%8A%A0%E5%AF%86%E5%92%8C%E8%A7%A3%E5%AF%86/1-symmetric-key%20encryption.png" alt="对称加密"></p>
+<p>对称密钥加密效率非常高，以至于用户几乎察觉不到加密和解密的延迟。对称密钥加密还提供了一定程度的认证机制，因为信息一旦经密钥加密，不可能被其他密钥解密。因此，只要密钥没有泄露且信息可以正确的解密，通信双方都能确定是在与对方通信。</p>
+<p>只有在通信双方保持密钥不被泄露的情况下，对称密钥加密才是有效的。如果其他人发现了密钥，将会影响双方的私密性和身份认证。一个未经授权的用户不仅可以使用密钥解密消息，还可以加密和发送一条新消息给通信中的一方，就好像它是拥有此密钥的另一方一样。</p>
+<p>对称密钥加密在SSL协议中扮演着重要的角色，它广泛地应用在身份认证、篡改监测以及 TCP/IP网络加密中。另外，SSL也使用了公钥加密，下一节将介绍这种技术。</p>
+<h3 id="公钥加密"><a href="#公钥加密" class="headerlink" title="公钥加密"></a>公钥加密</h3><p>公钥加密最常用的实现是基于<em>RSA Data Security</em>的专利算法，因此，本节将以<strong>RSA</strong>这种方式介绍公钥加密。</p>
+<p>公钥加密包括一对密钥：一个公钥和一个私钥——还有对其进行电子认证、签名和数据加密的实体。公钥是公开的，而对应的私钥是保密的。公钥加密的数据只能被对应的私钥解密。下图简单展示了公钥加密的工作方式。</p>
+<p><img src="http://ozgrgjwvp.bkt.clouddn.com/%E5%8A%A0%E5%AF%86%E5%92%8C%E8%A7%A3%E5%AF%86/2-public-key%20encryption.png" alt="公钥加密"></p>
+<p>上图这种方案可以让你自由发布一个公钥，只有你才能使用公钥读取加密的数据。一般情况下，为了给某些人发送加密数据，你首先使用那人的公钥进行加密，那人收到加密数据后使用对应的私钥进行解密。</p>
+<p>对比对称密钥加密，公钥加密需要更大的计算量，因此当数据量比较大时，这种加密方式就不太合适了。然而，可以使用它发送一个对称密钥，然后再用这个对称密钥加密另外的数据（注：这里有两个过程，第一步公钥加密，第二步对称密钥加密）。SSL正是使用的这种方式。</p>
+<p>就像上图显示的那样，上面的方案反过来同样适用（注：我觉得原文说反了，图中展示的就是这种方案）：使用私钥加密，然后使用对应的公钥解密。对于敏感数据，这不是一个理想的方式，因为根据定义，拥有公钥的任何人都可进行解密。尽管如此，使用私钥进行加密这种方式还是非常有用的，因为这意味着你能够使用你的私钥进行电子签名，这在电子商务及其他商业应用程序加密中非常重要。客户端程序比如Firefox能够使用你的公钥来确认这份使用你的私钥加密的消息是否被篡改。<em><a href="https://pingao777.github.io/2018/08/15/%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D%E6%98%AF%E4%BB%80%E4%B9%88/">数字证书是什么</a></em>这篇文章介绍了这个确认过程。</p>
+<h3 id="密钥长度和加密强度"><a href="#密钥长度和加密强度" class="headerlink" title="密钥长度和加密强度"></a>密钥长度和加密强度</h3><p>破解一个加密算法就是要找到将加密数据变为原始数据的密钥。对于对称密钥加密来说就是要找到进行数据加密的密钥，对于公钥加密来说，就是获得通信双方的私钥。</p>
+<p>破解对称密钥加密的一个方式是挨个测试算法中的每个密钥直到找到正确的密钥。对于公钥加密，密钥对中的一个（公钥）是公开的，另一个（私钥）经过已经公布的复杂数学计算得到。挨个测试密钥的方法被称作暴力破解法。</p>
+<p>加密算法被破解将会带来私密信息被拦截、被冒充甚至被欺诈的风险。</p>
+<p>加密算法的密钥强度是由破解此算法的最快方法与暴力破解法的速度对比值确定（注：意思是最快的破解方法和暴力破解速度差不多那么密钥强度高，如果最快的破解方法比暴力破解快得多那么密钥强度低）。</p>
+<p>对于对称密钥，加密的强度是由加密密钥的长度或者大小确定的：一般情况下，密钥越长，强度越高。密钥长度是使用位（bit）进行衡量的。例如，SSL协议的RC4对称密钥加密算法，128位的密钥要比40位的密钥安全的多。大致来说，128位的RC4加密强度是40位的RC4加密强度的3 x 10<sup>26</sup>倍（关于SSL中RC4加密的更多信息，详见<em><a href="https://developer.mozilla.org/en-US/docs/Archive/Security/Introduction_to_SSL" target="_blank" rel="external">Introduction to SSL</a></em>）。如果加密密钥已知最快的破解方法和暴力破解差不多，那么就可以说这个密钥是强力的（full strength）。</p>
+<p>不同的加密算法可能需要不同的密钥长度来达到同样的加密强度。例如，公钥加密中的RSA算法，因为它所基于数学原理，密钥只能是给定长度所有值的一个子集。其他加密算法，比如对称密钥加密的用到的算法，密钥可以是给定长度所有值，而不只是一个子集。</p>
+<p>因为RSA密钥破解起来相对容易，RSA加密算法的密钥长度要比较长，为了达到较高的加密强度，至少要达到1024位。相比之下，对于对称密钥加密的大部分算法，达到同样的加密强度，密钥长度只需要80位。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/08/18/HTTPS为什么是安全的/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    HTTPS为什么是安全的
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2018/08/15/数字签名是什么/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">数字签名是什么</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="valine-thread"></div>
+</section>
+    
+
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/七七八八/">七七八八</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术人生/">技术人生</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活生活/">生活生活</a><span class="category-list-count">2</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">10</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/2018/" style="font-size: 10px;">2018</a> <a href="/tags/Dota/" style="font-size: 10px;">Dota</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Markdown/" style="font-size: 15px;">Markdown</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/Python/" style="font-size: 20px;">Python</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/Vim/" style="font-size: 20px;">Vim</a> <a href="/tags/alpha-beta/" style="font-size: 10px;">alpha-beta</a> <a href="/tags/minimax/" style="font-size: 10px;">minimax</a> <a href="/tags/五子棋/" style="font-size: 10px;">五子棋</a> <a href="/tags/侏罗纪公园/" style="font-size: 10px;">侏罗纪公园</a> <a href="/tags/决策树/" style="font-size: 10px;">决策树</a> <a href="/tags/加密/" style="font-size: 15px;">加密</a> <a href="/tags/数据挖掘/" style="font-size: 10px;">数据挖掘</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/机器学习/" style="font-size: 20px;">机器学习</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/统计/" style="font-size: 20px;">统计</a> <a href="/tags/解密/" style="font-size: 15px;">解密</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a> <a href="/tags/随机森林/" style="font-size: 10px;">随机森林</a>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 pingao777<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/xcss/valine@v1.1.6/dist/Valine.min.js"></script>
+    <script>
+        new Valine({
+            el: '#valine-thread' ,
+            notify:false,
+            verify:false,
+            app_id: '0uUtzN1bmW45lEsXVGDMaekE-gzGzoHsz',
+            app_key: 'SiD0cv45eP3ptV9yXuif6K9V',
+            placeholder: '只会玩白牛.....'
+        });
+    </script>
+
+
+
+
+    
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

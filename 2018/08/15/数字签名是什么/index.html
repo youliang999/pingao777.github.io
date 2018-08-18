@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>数字签名是什么 | 瞎说</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="随着现在网银、电子商务的普及，“数字签名”屡屡被提到，我也曾一度迷惑，直到看到Mozilla MDN上的一篇文章Digital Signatures，下面我将翻译一下这篇文章。 加密和解密解决了三大互联网安全隐患（窃听、篡改、伪装）之窃听的问题，但是却没法避免信息被篡改。 本篇文章将向你介绍公共秘钥加密如何解决这个问题。">
+<meta name="keywords" content="HTTP,加密,解密">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数字签名是什么">
+<meta property="og:url" content="https://pingao777.github.io/2018/08/15/数字签名是什么/index.html">
+<meta property="og:site_name" content="瞎说">
+<meta property="og:description" content="随着现在网银、电子商务的普及，“数字签名”屡屡被提到，我也曾一度迷惑，直到看到Mozilla MDN上的一篇文章Digital Signatures，下面我将翻译一下这篇文章。 加密和解密解决了三大互联网安全隐患（窃听、篡改、伪装）之窃听的问题，但是却没法避免信息被篡改。 本篇文章将向你介绍公共秘钥加密如何解决这个问题。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ozgrgjwvp.bkt.clouddn.com/%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D%E6%98%AF%E4%BB%80%E4%B9%88/1-digital_signatures.png">
+<meta property="og:updated_time" content="2018-08-18T07:32:22.714Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数字签名是什么">
+<meta name="twitter:description" content="随着现在网银、电子商务的普及，“数字签名”屡屡被提到，我也曾一度迷惑，直到看到Mozilla MDN上的一篇文章Digital Signatures，下面我将翻译一下这篇文章。 加密和解密解决了三大互联网安全隐患（窃听、篡改、伪装）之窃听的问题，但是却没法避免信息被篡改。 本篇文章将向你介绍公共秘钥加密如何解决这个问题。">
+<meta name="twitter:image" content="http://ozgrgjwvp.bkt.clouddn.com/%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D%E6%98%AF%E4%BB%80%E4%B9%88/1-digital_signatures.png">
+    
+
+    
+
+    
+        <link rel="icon" href="/favicon.ico" />
+    
+
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="https://cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-44085500-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">瞎说</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">时间线</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于我</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">时间线</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于我</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">pingao777</h2>
+            <h3 id="title">Web Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Beijing</span>
+            <a id="follow" target="_blank" href="http://github.com/pingao777">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                21
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                26
+                <span>标签</span>
+            </div>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-数字签名是什么" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            数字签名是什么
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/08/15/数字签名是什么/">
+            <time datetime="2018-08-15T07:05:58.000Z" itemprop="datePublished">2018-08-15</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/技术人生/">技术人生</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/HTTP/">HTTP</a>, <a class="tag-link" href="/tags/加密/">加密</a>, <a class="tag-link" href="/tags/解密/">解密</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>随着现在网银、电子商务的普及，“数字签名”屡屡被提到，我也曾一度迷惑，直到看到Mozilla MDN上的一篇文章<em><a href="https://developer.mozilla.org/en-US/docs/Archive/Security/Digital_Signatures" target="_blank" rel="external">Digital Signatures</a></em>，下面我将翻译一下这篇文章。</p>
+<p>加密和解密解决了三大互联网安全隐患（窃听、篡改、伪装）之窃听的问题，但是却没法避免信息被篡改。</p>
+<p>本篇文章将向你介绍<strong>公共秘钥加密</strong>如何解决这个问题。</p>
+<a id="more"></a>
+<p>信息篡改及相关的认证技术依赖于一个数学函数<strong>单向哈希函数</strong>（<strong>one-way hash</strong>，也称作<strong>信息摘要</strong>）。单项散列函数可以根据原始数据生成一个定长的数据摘要，并且具有如下特性：</p>
+<ul>
+<li><p>原始数据不同，摘要不同（注：严格说来这句话不对，当数据大到一定程度，会发生碰撞的可能，但是概率实在太小了，可以忽略不计）。只要修改或者删除原始数据中哪怕一个字符，摘要都会发生显著的改变。</p>
+</li>
+<li><p>原始数据不可能由摘要推出，这也是单向哈希的名字由来。</p>
+</li>
+</ul>
+<p>同样地，在公共密钥加密中为了进行数字签名，要产生一对秘钥（key），一个称为<strong>私有签名秘钥</strong>（<strong>private signing key </strong>），一个称为<strong>公开验证秘钥</strong>（<strong>public verification key</strong>）。后者是公开的，前者是保密的，只有所有者知道。二者在数学上有一定的联系，想从公开验证秘钥推出私有签名秘钥几乎是不可能的或者要付出高昂的代价（注：比如时间、金钱）。<strong>摘要及其他相关信息，连同哈希算法，一并被称为数字签名。</strong></p>
+<p>下图简单展示了数字签名如何验证数据的合法性。</p>
+<p><img src="http://ozgrgjwvp.bkt.clouddn.com/%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D%E6%98%AF%E4%BB%80%E4%B9%88/1-digital_signatures.png" alt="数字签名"></p>
+<p>上图显示发送者将两份数据发送给接受者：一份原始数据，一份加密过的摘要数据，即用私钥和相关的单向哈希算法加密过的数据摘要（注：这里有两个过程，第一步求数据摘要：原始数据-&gt;摘要，第二步加密：摘要-&gt;加密过的摘要）。为了验证数据的合法性，接受者首先使用签名者的公钥对加密摘要进行解密得到摘要，然后对原始数据应用同样的单向哈希算法得到一份新的摘要（单项哈希算法会和数据一并发送给接受者，图中未标出），最后，接受者对比这两份摘要。如果二者一致，那么说明数据没有篡改，否则数据可能被篡改或者发送过来的公钥和签名者的私钥不匹配。</p>
+<p>如果两份摘要一致，接受者就能确定解密签名的公钥和生成签名的私钥是匹配的，然后进一步确认签名者的身份，尽管要确认签名者的身份还需要其他一些步骤来确定这个公钥确实属于某个人或实体，详见<em><a href="https://developer.mozilla.org/en-US/docs/Introduction_to_Public-Key_Cryptography" target="_blank" rel="external">Introduction to Public-Key Cryptography</a></em>.</p>
+<p>数字签名的意义堪比手写签名。如果秘钥没有失去所有者的控制，一旦签名，过后很难进行否认。数字签名的这个特性提供了高度的不可否认性，签名者签名后就无法抵赖。以致在一些情形中，数字签名具有手写签名的同等法律效力。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/08/17/加密和解密/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    加密和解密
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2018/08/10/马上TI了，有一起玩的道友吗/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">马上TI了，有一起玩的道友吗</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="valine-thread"></div>
+</section>
+    
+
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/七七八八/">七七八八</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术人生/">技术人生</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活生活/">生活生活</a><span class="category-list-count">2</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">10</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/2018/" style="font-size: 10px;">2018</a> <a href="/tags/Dota/" style="font-size: 10px;">Dota</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Markdown/" style="font-size: 15px;">Markdown</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/Python/" style="font-size: 20px;">Python</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/Vim/" style="font-size: 20px;">Vim</a> <a href="/tags/alpha-beta/" style="font-size: 10px;">alpha-beta</a> <a href="/tags/minimax/" style="font-size: 10px;">minimax</a> <a href="/tags/五子棋/" style="font-size: 10px;">五子棋</a> <a href="/tags/侏罗纪公园/" style="font-size: 10px;">侏罗纪公园</a> <a href="/tags/决策树/" style="font-size: 10px;">决策树</a> <a href="/tags/加密/" style="font-size: 15px;">加密</a> <a href="/tags/数据挖掘/" style="font-size: 10px;">数据挖掘</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/机器学习/" style="font-size: 20px;">机器学习</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/统计/" style="font-size: 20px;">统计</a> <a href="/tags/解密/" style="font-size: 15px;">解密</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a> <a href="/tags/随机森林/" style="font-size: 10px;">随机森林</a>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 pingao777<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/xcss/valine@v1.1.6/dist/Valine.min.js"></script>
+    <script>
+        new Valine({
+            el: '#valine-thread' ,
+            notify:false,
+            verify:false,
+            app_id: '0uUtzN1bmW45lEsXVGDMaekE-gzGzoHsz',
+            app_key: 'SiD0cv45eP3ptV9yXuif6K9V',
+            placeholder: '只会玩白牛.....'
+        });
+    </script>
+
+
+
+
+    
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

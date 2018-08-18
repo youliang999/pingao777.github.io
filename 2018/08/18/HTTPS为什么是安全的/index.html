@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>HTTPS为什么是安全的 | 瞎说</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="HTTP我们都知道是超文本传输协议，HTTPS与HTTP一字之差，它到底是什么呢？引用《HTTP权威指南》的介绍：  HTTPS是最常见的HTTP安全版本。它得到了很广泛的应用，所有主要的商业浏览器和服务器上都提供HTTPS。HTTPS将HTTP协议与一组强大的对称、非对称和基于证书的加密技术结合在一起，使得HTTPS不仅很安全，而且很灵活，很容易在处于无序状态的、分散的全球互联网上进行管理。">
+<meta name="keywords" content="HTTP,HTTPS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTPS为什么是安全的">
+<meta property="og:url" content="https://pingao777.github.io/2018/08/18/HTTPS为什么是安全的/index.html">
+<meta property="og:site_name" content="瞎说">
+<meta property="og:description" content="HTTP我们都知道是超文本传输协议，HTTPS与HTTP一字之差，它到底是什么呢？引用《HTTP权威指南》的介绍：  HTTPS是最常见的HTTP安全版本。它得到了很广泛的应用，所有主要的商业浏览器和服务器上都提供HTTPS。HTTPS将HTTP协议与一组强大的对称、非对称和基于证书的加密技术结合在一起，使得HTTPS不仅很安全，而且很灵活，很容易在处于无序状态的、分散的全球互联网上进行管理。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ozgrgjwvp.bkt.clouddn.com/HTTPS%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E5%AE%89%E5%85%A8%E7%9A%84/1-http%20layer.png">
+<meta property="og:updated_time" content="2018-08-18T07:51:24.151Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HTTPS为什么是安全的">
+<meta name="twitter:description" content="HTTP我们都知道是超文本传输协议，HTTPS与HTTP一字之差，它到底是什么呢？引用《HTTP权威指南》的介绍：  HTTPS是最常见的HTTP安全版本。它得到了很广泛的应用，所有主要的商业浏览器和服务器上都提供HTTPS。HTTPS将HTTP协议与一组强大的对称、非对称和基于证书的加密技术结合在一起，使得HTTPS不仅很安全，而且很灵活，很容易在处于无序状态的、分散的全球互联网上进行管理。">
+<meta name="twitter:image" content="http://ozgrgjwvp.bkt.clouddn.com/HTTPS%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E5%AE%89%E5%85%A8%E7%9A%84/1-http%20layer.png">
+    
+
+    
+
+    
+        <link rel="icon" href="/favicon.ico" />
+    
+
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="https://cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-44085500-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">瞎说</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">时间线</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于我</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">时间线</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于我</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">pingao777</h2>
+            <h3 id="title">Web Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Beijing</span>
+            <a id="follow" target="_blank" href="http://github.com/pingao777">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                21
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                26
+                <span>标签</span>
+            </div>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-HTTPS为什么是安全的" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            HTTPS为什么是安全的
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/08/18/HTTPS为什么是安全的/">
+            <time datetime="2018-08-18T07:33:59.000Z" itemprop="datePublished">2018-08-18</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/技术人生/">技术人生</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/HTTP/">HTTP</a>, <a class="tag-link" href="/tags/HTTPS/">HTTPS</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>HTTP我们都知道是超文本传输协议，HTTPS与HTTP一字之差，它到底是什么呢？引用《HTTP权威指南》的介绍：</p>
+<blockquote>
+<p>HTTPS是最常见的HTTP安全版本。它得到了很广泛的应用，所有主要的商业浏览器和服务器上都提供HTTPS。HTTPS将HTTP协议与一组强大的对称、非对称和基于证书的加密技术结合在一起，使得HTTPS不仅很安全，而且很灵活，很容易在处于无序状态的、分散的全球互联网上进行管理。</p>
+</blockquote>
+<p>HTTPS是最常见的HTTP安全版本。多出的S是Security安全的意思，那么它是如何保证安全的呢？</p>
+<a id="more"></a>
+<p>我们先看看HTTP和HTTPS通信协议层。</p>
+<p><img src="http://ozgrgjwvp.bkt.clouddn.com/HTTPS%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E5%AE%89%E5%85%A8%E7%9A%84/1-http%20layer.png" alt="配图来源于《HTTP权威指南》"></p>
+<p>可以看到，相比HTTP，HTTPS多了一个安全层协议<strong>SSL/TLS</strong>（安全套接层Secure Sockets Layer和传输层安全协议Transport Layer Security，后者是SSL的后继版本），保证安全的秘密就是这个安全层协议。<strong>简单说来，HTTPS就是在安全的传输层上传输报文的HTTP。</strong></p>
+<p>让我们具体看看，SSL包括两部分：记录协议（record protocol）和握手协议（handshake protocol），前者主要定义了数据格式，后者定义了安全传输客户端/服务器需要交换的具体信息，这是我们要介绍的重点。</p>
+<p>握手协议包括下面十个步骤：</p>
+<ol>
+<li>客户端向服务器发送SSL协议版本、自己支持的加密方式、随机产生的一段数据。</li>
+<li>服务器向客户端发送SSL协议版本、根据双方支持的加密方式确定一个最安全的加密方式、随机产生的一段数据以及自己的数字证书。</li>
+<li>客户端验证服务器的合法性，如果合法进行下一步，否则会话终止，包括如下过程：</li>
+</ol>
+<ul>
+<li>数字证书是否过期</li>
+<li>数字证书是否可信，即证书的颁发机构是否在客户端往往是浏览器的信任列表</li>
+<li>数字证书的公钥能否验证数字签名，即数字签名的合法性，这个过程参见<em><a href="https://pingao777.github.io/2018/08/15/%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D%E6%98%AF%E4%BB%80%E4%B9%88/">数字签名是什么</a></em></li>
+<li>域名是否与证书的域名匹配</li>
+</ul>
+<ol>
+<li>如果第3步中服务器合法，客户端使用使用到目前产生的所有数据为本会话生成一个预置密码（ premaster secret），然后使用服务器的公钥加密预置密码，将密文发送给服务器。</li>
+<li>如果服务器要求对客户端进行验证（可选），客户端会将签名数据和证书连同预置密码密文一并发给服务器。</li>
+<li>服务器对客户端进行验证，过程与第3步类似。验证不通过会话终止，验证通过，服务器使用私钥解密预置密码，然后执行一系列步骤（客户端会同时执行同样的步骤）生成主密钥（master secret）。</li>
+<li>客户端和服务器使用主密钥生成会话密钥（session key），这就是加密后面所有数据的对称密钥。</li>
+<li>客户端发送一条消息通知服务器以后的数据都将使用会话密钥加密，然后再发送一条消息表明握手过程的客户端部分完成。</li>
+<li>服务器也发送一条消息通知客户端以后的数据都将使用会话密钥加密，然后再发送一条消息表明握手过程的服务器部分完成。</li>
+<li>握手过程完成，SSL会话开始使用会话密钥传输数据。</li>
+</ol>
+<p>可以看到整个握手过程既包括非对称加密又包括对称加密，先用非对称密钥传送对称密钥，再用对称密钥传送后面的数据，充分利用了两种加密方式的优势，参见<em><a href="https://pingao777.github.io/2018/08/17/%E5%8A%A0%E5%AF%86%E5%92%8C%E8%A7%A3%E5%AF%86/">加密和解密</a></em>。</p>
+<p>回到开头的问题，HTTPS如何保证安全呢？兵法云：知己知彼百战百胜，我们知道互联网安全三大威胁：窃听、篡改和伪装，假如让我们作为攻击者，该如何去做呢？</p>
+<p>事实上，上面十个步骤中第1、2步是明文传输的，我们可以对这两步的信息进行拦截得到双方的协议版本、加密方式、随机数以及服务器证书，然后原封不动的将相应信息再发送给对方，我们在通信中间扮演一个伪装者，对客户端来说我们就是服务器，对服务器来说我们就是客户端。现在来到第3步，客户端对我们的攻击全然不知，还把我们当成真正的服务器，客户端验证我们发送给它的数字证书，结果肯定是通过的，因为我们是将服务器的数字证书原封不动的发过去的。接着客户端将预置密码加密然后发送给服务器，这个信息肯定也没法逃脱我们的火眼金睛，但是我们拿过拦截到的信息一看有点傻眼了，由于我们没有服务器密钥，无法进行解密，也就无法得到预置密码，接下来的步骤就无法进行，客户端这时候就反应过来了，等了这么久没反应，对方肯定就问题，会话终止。至于其他的步骤，都是加密数据，窃听篡改没什么意义，这样，三大威胁就被解决了。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2018/08/17/加密和解密/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">加密和解密</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="valine-thread"></div>
+</section>
+    
+
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/七七八八/">七七八八</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术人生/">技术人生</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活生活/">生活生活</a><span class="category-list-count">2</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">10</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/2018/" style="font-size: 10px;">2018</a> <a href="/tags/Dota/" style="font-size: 10px;">Dota</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Markdown/" style="font-size: 15px;">Markdown</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/Python/" style="font-size: 20px;">Python</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/Vim/" style="font-size: 20px;">Vim</a> <a href="/tags/alpha-beta/" style="font-size: 10px;">alpha-beta</a> <a href="/tags/minimax/" style="font-size: 10px;">minimax</a> <a href="/tags/五子棋/" style="font-size: 10px;">五子棋</a> <a href="/tags/侏罗纪公园/" style="font-size: 10px;">侏罗纪公园</a> <a href="/tags/决策树/" style="font-size: 10px;">决策树</a> <a href="/tags/加密/" style="font-size: 15px;">加密</a> <a href="/tags/数据挖掘/" style="font-size: 10px;">数据挖掘</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/机器学习/" style="font-size: 20px;">机器学习</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/统计/" style="font-size: 20px;">统计</a> <a href="/tags/解密/" style="font-size: 15px;">解密</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a> <a href="/tags/随机森林/" style="font-size: 10px;">随机森林</a>
+        </div>
+    </div>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 pingao777<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/xcss/valine@v1.1.6/dist/Valine.min.js"></script>
+    <script>
+        new Valine({
+            el: '#valine-thread' ,
+            notify:false,
+            verify:false,
+            app_id: '0uUtzN1bmW45lEsXVGDMaekE-gzGzoHsz',
+            app_key: 'SiD0cv45eP3ptV9yXuif6K9V',
+            placeholder: '只会玩白牛.....'
+        });
+    </script>
+
+
+
+
+    
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
