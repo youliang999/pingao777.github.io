@@ -1,89 +1,105 @@
-# Menus
-menu:
-  主页: .
-  时间线: archives
-  分类: categories
-  标签: tags
-  关于我: about
-
-# Customize
-customize:
-    logo:
-        enabled: true
-        width: 40
-        height: 40
-        url: images/logo.png
-    profile:
-        enabled: true # Whether to show profile bar
-        avatar: css/images/avatar.png
-        gravatar: # Gravatar email address, if you enable Gravatar, your avatar config will be overriden
-        author: pingao777
-        author_title: Web Developer
-        location: Beijing
-        follow: http://github.com/pingao777
-    highlight: monokai
-    sidebar: right # sidebar position, options: left, right or leave it empty
-    thumbnail: false # enable posts thumbnail, options: true, false
-    favicon: favicon.ico # path to favicon
-
-    social_link_tooltip: false # enable the social link tooltip, options: true, false
-
-# Widgets
-widgets:
-    - category
-    - archive
-    - tagcloud
-
-# Search
-search:
-    insight: true # you need to install `hexo-generator-json-content` before using Insight Search
-    swiftype: # enter swiftype install key here
-    baidu: false # you need to disable other search engines to use Baidu search, options: true, false
-
-# Comment
-comment:
-    disqus:  # enter disqus shortname here
-    duoshuo: # enter duoshuo shortname here
-    youyan: # enter youyan uid here
-    facebook: # enter true to enable
-    isso: # enter the domain name of your own comment isso server eg. comments.example.com
-    changyan: # please fill in `appid` and `conf` to enable
-        appid:
-        conf:
-    gitment:
-        owner: #your github ID
-        repo: #the repo to store comments
-        #Register an OAuth application, and you will get a client ID and a client secret.
-        client_id: #your client ID
-        client_secret: #your client secret
-    livere: # enter livere uid here
-    valine: # Valine Comment System https://github.com/xCss/Valine
-        on: true # enter true to enable
-        appId: 0uUtzN1bmW45lEsXVGDMaekE-gzGzoHsz # enter the leancloud application appId here
-        appKey: SiD0cv45eP3ptV9yXuif6K9V # enter the leancloud application appKey here
-        notify: false # enter true to enable <Mail notifier> https://github.com/xCss/Valine/wiki/Valine-%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E9%82%AE%E4%BB%B6%E6%8F%90%E9%86%92%E8%AE%BE%E7%BD%AE
-        verify: false # enter true to enable <Validation code>
-        placeholder: cn dota best dota # enter the comment box placeholder
-
-
-# Share
-share: default # options: jiathis, bdshare, addtoany, default
-
-# Plugins
-plugins:
-    lightgallery: false # options: true, false
-    justifiedgallery: false # options: true, false
-    google_analytics: UA-44085500-1 # enter the tracking ID for your Google Analytics
-    google_site_verification: # enter Google site verification code
-    baidu_analytics: # enter Baidu Analytics hash key
-    mathjax: true # options: true, false
-
-# Miscellaneous
-miscellaneous:
-    open_graph: # see http://ogp.me
-        fb_app_id:
-        fb_admins:
-        twitter_id:
-        google_plus:
+# Version of the Icarus theme that is currently used
+version: 2.0.0
+# Path or URL to the website's icon
+favicon: /images/favicon.svg
+# Path or URL to RSS atom.xml
+rss:
+# Path or URL to the website's logo to be shown on the left of the navigation bar or footer
+logo: images/logo.png
+# Open Graph metadata (https://hexo.io/docs/helpers.html#open-graph)
+open_graph:
+    # Facebook App ID
+    fb_app_id:
+    # Facebook Admin ID
+    fb_admins:
+    # Twitter ID
+    twitter_id:
+    # Twitter site
+    twitter_site:
+    # Google+ profile link
+    google_plus:
+# Navigation bar link settings
+navbar:
+    # Navigation bar menu links
+    menu:
+        主页: /
+        归档: /archives
+        分类: /categories
+        标签: /tags
+        关于: /about
+    # Navigation bar links to be shown on the right
+# Footer section link settings
+footer:
+    # Links to be shown on the right of the footer section
     links:
-        Hexo: http://hexo.io
+        Creative Commons:
+            icon: fab fa-creative-commons
+            url: 'https://creativecommons.org/'
+        Attribution 4.0 International:
+            icon: fab fa-creative-commons-by
+            url: 'https://creativecommons.org/licenses/by/4.0/'
+        Download on GitHub:
+            icon: fab fa-github
+            url: 'http://github.com/ppoffice/hexo-theme-icarus'
+# Article display settings
+article:
+    # Code highlight theme (https://github.com/highlightjs/highlight.js/tree/master/src/styles)
+    highlight: atom-one-light
+    # Whether to show article thumbnail images
+    thumbnail: false
+    # Whether to show estimate article reading time
+    readtime: false
+# Search plugin settings (http://ppoffice.github.io/hexo-theme-icarus/categories/Configuration/Search-Plugins)
+search:
+    # Name of the search plugin
+    type: insight
+# Comment plugin settings (http://ppoffice.github.io/hexo-theme-icarus/categories/Configuration/Comment-Plugins)
+comment:
+    # Name of the comment plugin
+    type: valine
+    app_id: 0uUtzN1bmW45lEsXVGDMaekE-gzGzoHsz        # (required) LeanCloud application id
+    app_key: SiD0cv45eP3ptV9yXuif6K9V       # (required) LeanCloud application key
+    notify: false           # (optional) receive email notification
+    verify: false           # (optional) show verification code
+    placeholder: cn dota best dota   # (optional) comment box placeholder text
+# Share plugin settings (http://ppoffice.github.io/hexo-theme-icarus/categories/Configuration/Share-Plugins)
+share:
+    # Share plugin name
+    type: sharethis
+    install_url: //platform-api.sharethis.com/js/sharethis.js#......  # (required)
+# Sidebar widget settings (http://ppoffice.github.io/hexo-theme-icarus/categories/Widgets/)
+widgets:
+# Other plugin settings
+plugins:
+    # Enable page animations
+    animejs: true
+    # Enable the lightGallery and Justified Gallery plugins (http://ppoffice.github.io/hexo-theme-icarus/2016/07/08/plugin/Gallery/)
+    gallery: true
+    # Enable the Outdated Browser plugin (http://outdatedbrowser.com/)
+    outdated-browser: true
+    # Enable the MathJax plugin (http://ppoffice.github.io/hexo-theme-icarus/2018/01/01/plugin/MathJax/)
+    mathjax: true
+    # Show the back to top button on mobile devices
+    back-to-top: true
+    # Google Analytics plugin settings (http://ppoffice.github.io/hexo-theme-icarus/2018/01/01/plugin/Analytics/#Google-Analytics)
+    google-analytics:
+        # Google Analytics tracking id
+        tracking_id: UA-44085500-1
+    # Baidu Analytics plugin settings (http://ppoffice.github.io/hexo-theme-icarus/2018/01/01/plugin/Analytics/#Baidu-Analytics)
+    baidu-analytics:
+        # Baidu Analytics tracking id
+        tracking_id:
+    # Hotjar user feedback plugin (http://ppoffice.github.io/hexo-theme-icarus/2018/01/01/plugin/Analytics/#Hotjar)
+    hotjar:
+        # Hotjar site id
+        site_id:
+    # Show a loading progress bar at top of the page
+    progressbar: true
+# CDN provider settings
+providers:
+    # Name or URL of the JavaScript and/or stylesheet CDN provider
+    cdn: jsdelivr
+    # Name or URL of the webfont CDN provider
+    fontcdn: google
+    # Name or URL of the webfont Icon CDN provider
+    iconcdn: fontawesome
