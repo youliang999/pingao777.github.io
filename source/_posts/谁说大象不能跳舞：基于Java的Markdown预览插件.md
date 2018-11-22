@@ -15,7 +15,7 @@ Java一直以来都给人留下了笨重的印象，按说插件这种轻量的�
 
 既然现在Markdown Viewer只能显示不能滚动，那么通过程序将Vim的某种位置信息传给浏览器，然后调用js滚动到这个位置不就可以了吗？想让浏览器显示网页而且网页的内容还得不停的变，需要一个Web服务器，这正是Java的强项。从浏览器到Java的路走通了，但是Vim到Java的路怎么走呢？由于Vim不支持Java，二者怎么通信呢，这时看到著名的胶水语言，编程语言界的媒婆Python是被Vim支持的，方案有了：让Python与Java通信。好，这样整个流程就通了。整体框架如下所示：
 
-![architecture](http://ozgrgjwvp.bkt.clouddn.com/%E8%B0%81%E8%AF%B4%E5%A4%A7%E8%B1%A1%E4%B8%8D%E8%83%BD%E8%B7%B3%E8%88%9E%EF%BC%9A%E5%9F%BA%E4%BA%8EJava%E7%9A%84Markdown%E9%A2%84%E8%A7%88%E6%8F%92%E4%BB%B6/architecture.png)
+![architecture](https://wocanmei-hexo.nos-eastchina1.126.net/%E8%B0%81%E8%AF%B4%E5%A4%A7%E8%B1%A1%E4%B8%8D%E8%83%BD%E8%B7%B3%E8%88%9E%EF%BC%9A%E5%9F%BA%E4%BA%8EJava%E7%9A%84Markdown%E9%A2%84%E8%A7%88%E6%8F%92%E4%BB%B6/architecture.png)
 
 ### Java服务器
 
@@ -276,9 +276,9 @@ private static void transformLocalImgSrc(Element element) {
 
 效果如下：
 
-![snapshot-ch](http://ozgrgjwvp.bkt.clouddn.com/markdown-preview-sync/ch.png)
+![snapshot-ch](https://wocanmei-hexo.nos-eastchina1.126.net/markdown-preview-sync/ch.png)
 
-![snapshot-en](http://ozgrgjwvp.bkt.clouddn.com/markdown-preview-sync/en.png)
+![snapshot-en](https://wocanmei-hexo.nos-eastchina1.126.net/markdown-preview-sync/en.png)
 
 参考资料：
 

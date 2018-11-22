@@ -19,7 +19,7 @@ tags: [Vim, Markdown]
 
 <!--more-->
 
-![效果图](http://ozgrgjwvp.bkt.clouddn.com/markdown-preview-sync/mpsync-snapshot.png)
+![效果图](https://wocanmei-hexo.nos-eastchina1.126.net/markdown-preview-sync/mpsync-snapshot.png)
 
 **为了用户体验，预览并不是实时显示的，而是在换行时或保存时**。这一点是有意为之的，毕竟大家对Markdown语法都了如指掌了，只是想偶尔看下效果。相信大家都有这样的体验，眼睛不停的在编辑屏和预览屏来回切换，眼睛很累，同时思路也很容易被打断，而且根据我个人的实验，同步频率太快会影响Vim的流畅性。
 

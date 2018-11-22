@@ -94,9 +94,9 @@ ABCSAKDFFEFKJDDEFKLD
 
 ```python
 right['D']=1
-right['E']=2            
-right['F']=3         
-right['K']=4         
+right['E']=2
+right['F']=3
+right['K']=4
 ```
 
 下面是可能出现的三种情形，
@@ -203,10 +203,10 @@ ABBBB #0 0
 
 这次好多了，i移动了3次，只比较了15个字符，就完成了整个检索，算法复杂度基本为线性。好了，算法分析与证明不是那么有意思，最后就以我做的两个实验来结束吧。
 
-![](http://img.blog.csdn.net/20160731213353626)
+![](https://wocanmei-hexo.nos-eastchina1.126.net/%E7%AE%80%E6%B4%81%E9%AB%98%E6%95%88%E7%9A%84Boyer-Moore%E7%AE%97%E6%B3%95/1-random%20string.png)
 
 横轴为文本长度，纵轴表示比较的字符数，文本和模式从26个大写字母随机生成。可以看到，对于长度为10的模式，BM算法复杂度大约为$O(N/M)$，暴力检索为$O(N)$。
 
-![](http://img.blog.csdn.net/20160731213449705)
+![](https://wocanmei-hexo.nos-eastchina1.126.net/%E7%AE%80%E6%B4%81%E9%AB%98%E6%95%88%E7%9A%84Boyer-Moore%E7%AE%97%E6%B3%95/2-repeat%20string.png)
 
 与上图不同，这幅图的文本和模式是从4个大写字母随机选择，因此重复率要高的多。可以看到，对于重复率很高的字符串，BM算法效率也能达到$O(N)$，而暴力检索接近$O(NM)$。

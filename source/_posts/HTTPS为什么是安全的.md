@@ -14,7 +14,7 @@ HTTPS是最常见的HTTP安全版本。多出的S是Security安全的意思，�
 
 我们先看看HTTP和HTTPS通信协议层。
 
-![配图来源于《HTTP权威指南》](http://ozgrgjwvp.bkt.clouddn.com/HTTPS%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E5%AE%89%E5%85%A8%E7%9A%84/1-http%20layer.png)
+![配图来源于《HTTP权威指南》](https://wocanmei-hexo.nos-eastchina1.126.net/HTTPS%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E5%AE%89%E5%85%A8%E7%9A%84/1-http%20layer.png)
 
 可以看到，相比HTTP，HTTPS多了一个安全层协议**SSL/TLS**（安全套接层Secure Sockets Layer和传输层安全协议Transport Layer Security，后者是SSL的后继版本），保证安全的秘密就是这个安全层协议。**简单说来，HTTPS就是在安全的传输层上传输报文的HTTP。**
 

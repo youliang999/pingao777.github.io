@@ -96,7 +96,7 @@ private int alphaBeta(Board board, int depth, int alpha, int beta, Player player
 
 如果想在我的代码上继续前进，请戳[这里](https://github.com/pingao777/NewBe)，下图是一局电脑对战的动图。
 
-![](http://ozgrgjwvp.bkt.clouddn.com/2017-12-11-gomoku.gif)
+![](https://wocanmei-hexo.nos-eastchina1.126.net/2017-12-11-gomoku.gif)
 
 参考资料：
 

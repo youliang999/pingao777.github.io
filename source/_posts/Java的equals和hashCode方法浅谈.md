@@ -19,7 +19,7 @@ tags: Java
 ### 二、equals方法
 
 先来看见`equals`方法的签名，
-```java 
+```java
 public boolean equals(Object obj) {
   return (this == obj);
 }
@@ -88,7 +88,7 @@ public boolean equals(Object obj) {
       }
 
       ...  // Remainder omitted
-    } 
+    }
 
     public class ColorPoint extends Point {
       private final Color color;
@@ -109,18 +109,18 @@ public boolean equals(Object obj) {
 
         // o is a ColorPoint; do a full comparison
         return super.equals(o) && ((ColorPoint) o).color == color;
-      } 
+      }
 
       ...  // Remainder omitted
-    } 
+    }
 
     ColorPoint p1 = new ColorPoint(1, 2, Color.RED);
     Point p2 = new Point(1, 2);
-    ColorPoint p3 = new ColorPoint(1, 2, Color.BLUE); 
+    ColorPoint p3 = new ColorPoint(1, 2, Color.BLUE);
     ```
     显然`ColorPoint`的`equals`实现违反了传递性，`p1.equals(p2) == p2.equals(p3) != p1.equals(p3)`。假如`Point`有两个子类`ColorPoint`和`SmellPoint`，`colorPoint.equals(smellPoint)`将会导致无限递归，最终导致内存耗尽。引用《Effective Java》的说法，
 
-    > There is no way to extend an instantiable class and add a value component while preserving the equals contract, unless you’re willing to forgo the benefits of object-oriented abstraction. 
+    > There is no way to extend an instantiable class and add a value component while preserving the equals contract, unless you’re willing to forgo the benefits of object-oriented abstraction.
 
     这句话的大意是如果你继承扩展一个类，就没法再保持`equals`的原则了，除非放弃使用继承。放弃继承？这不是让我们因噎废食嘛，咦，别说，还真能放弃继承，那就是组合，因为本文的重点是`equals`和`hashCode`就不展开了。
 
@@ -180,7 +180,7 @@ public native int hashCode();
 
     初学者可能觉得最后一条语句会返回1，事实上返回的是`null`，为什么会这样呢？明明将数据放进去了，而数据却像被黑洞吞噬一样，要解释得从`HashMap`的数据结构说起，`HashMap`是由数组和链表组成的一种组合结构，如下图，往里存放时，`hashCode`决定数组的下标，而`equals`用于查找值是否已存在，存在的话替换，否则插入；往外取时，先用`hashCode`找到对应数组下标，然后用`equals`挨个比较直到链表的尾部，找到返回相应值，找不到返回null。再回过头看刚才的问题，先放进去一个`new Person(10, "小明")`，然后取的时候又新建了一个`new Person(10, "小明")`，由于没有重写`hashCode`，这两个对象的`hashCode`是不一样的，存和取的数组下标也就不一样，自然取不出来了。
 
-    ![HashMap数据结构](http://ozgrgjwvp.bkt.clouddn.com/Java%E7%9A%84equals%E5%92%8ChashCode%E6%96%B9%E6%B3%95%E6%B5%85%E8%B0%88/hashmap.png)
+    ![HashMap数据结构](https://wocanmei-hexo.nos-eastchina1.126.net/Java%E7%9A%84equals%E5%92%8ChashCode%E6%96%B9%E6%B3%95%E6%B5%85%E8%B0%88/hashmap.png)
 
 3. 两个对象`equals`返回`false`，`hashCode`返回值可以相等，但是如果不等的话，可以改进哈希数据结构的性能。这条原则也可以用`HashMap`的数据结构解释，举一个极端的例子，假如`Person`所有对象的`hashCode`都一样，那么`HashMap`内部数组的下标都一样，数据就会进到同一张链表里，这张链表比正常情况下要长的多，而遍历链表是一项耗时的工作，性能也就下来了。
 
