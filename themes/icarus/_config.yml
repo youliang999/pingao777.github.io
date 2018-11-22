@@ -56,12 +56,7 @@ search:
 # Comment plugin settings (http://ppoffice.github.io/hexo-theme-icarus/categories/Configuration/Comment-Plugins)
 comment:
     # Name of the comment plugin
-    type: valine
-    app_id: 0uUtzN1bmW45lEsXVGDMaekE-gzGzoHsz        # (required) LeanCloud application id
-    app_key: SiD0cv45eP3ptV9yXuif6K9V       # (required) LeanCloud application key
-    notify: false           # (optional) receive email notification
-    verify: false           # (optional) show verification code
-    placeholder: cn dota best dota   # (optional) comment box placeholder text
+    type:
 # Share plugin settings (http://ppoffice.github.io/hexo-theme-icarus/categories/Configuration/Share-Plugins)
 share:
     # Share plugin name
