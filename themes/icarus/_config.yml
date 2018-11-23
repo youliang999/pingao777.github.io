@@ -44,7 +44,7 @@ footer:
 # Article display settings
 article:
     # Code highlight theme (https://github.com/highlightjs/highlight.js/tree/master/src/styles)
-    highlight: atom-one-light
+    highlight: monokai-sublime
     # Whether to show article thumbnail images
     thumbnail: false
     # Whether to show estimate article reading time
