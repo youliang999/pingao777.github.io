@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang=zh>
+<html  lang="zh">
 <head>
     <meta charset="utf-8">
-    
-    <title>浅谈Java泛型 | 瞎说</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>浅谈Java泛型 - 瞎说</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+
+
     <meta name="description" content="相信每个Java程序员对泛型都不陌生，不少人也用过泛型，但是泛型中确实有些点容易让人迷惑，下面我结合自己的使用经历和理解谈谈对泛型的认识，不求面面俱到，但求切中要害。">
 <meta name="keywords" content="Java,泛型">
 <meta property="og:type" content="article">
@@ -17,211 +19,144 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浅谈Java泛型">
 <meta name="twitter:description" content="相信每个Java程序员对泛型都不陌生，不少人也用过泛型，但是泛型中确实有些点容易让人迷惑，下面我结合自己的使用经历和理解谈谈对泛型的认识，不求面面俱到，但求切中要害。">
-    
 
-    
 
-    
-        <link rel="icon" href="/favicon.ico" />
-    
 
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/libs/open-sans/styles.css">
-    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
 
-    <link rel="stylesheet" href="/css/style.css">
 
-    <script src="https://cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
-    
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai-sublime.css">
+
+
     
     
     
-        <script type="text/javascript">
-(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
 
-ga('create', 'UA-44085500-1', 'auto');
-ga('send', 'pageview');
-
-</script>
     
     
     
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
 
 
-</head>
+    
+    
 
-<body>
-    <div id="container">
-        <header id="header">
-    <div id="header-main" class="header-inner">
-        <div class="outer">
-            <a href="/" id="logo">
-                <i class="logo"></i>
-                <span class="site-title">瞎说</span>
-            </a>
-            <nav id="main-nav">
-                
-                    <a class="main-nav-link" href="/.">主页</a>
-                
-                    <a class="main-nav-link" href="/archives">时间线</a>
-                
-                    <a class="main-nav-link" href="/categories">分类</a>
-                
-                    <a class="main-nav-link" href="/tags">标签</a>
-                
-                    <a class="main-nav-link" href="/about">关于我</a>
-                
-            </nav>
-            
-                
-                <nav id="sub-nav">
-                    <div class="profile" id="profile-nav">
-                        <a id="profile-anchor" href="javascript:;">
-                            <img class="avatar" src="/css/images/avatar.png" />
-                            <i class="fa fa-caret-down"></i>
-                        </a>
-                    </div>
-                </nav>
-            
-            <div id="search-form-wrap">
+    
+    
 
-    <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
-        <button type="submit" class="search-form-submit"></button>
-    </form>
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-44085500-1"></script>
 <script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: '文章',
-            PAGES: '页面',
-            CATEGORIES: '分类',
-            TAGS: '标签',
-            UNTITLED: '(未命名)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-44085500-1');
 </script>
-<script src="/js/insight.js"></script>
 
-</div>
-        </div>
-    </div>
-    <div id="main-nav-mobile" class="header-sub header-inner">
-        <table class="menu outer">
-            <tr>
-                
-                    <td><a class="main-nav-link" href="/.">主页</a></td>
-                
-                    <td><a class="main-nav-link" href="/archives">时间线</a></td>
-                
-                    <td><a class="main-nav-link" href="/categories">分类</a></td>
-                
-                    <td><a class="main-nav-link" href="/tags">标签</a></td>
-                
-                    <td><a class="main-nav-link" href="/about">关于我</a></td>
-                
-                <td>
-                    
-    <div class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
-    </div>
 
-                </td>
-            </tr>
-        </table>
-    </div>
-</header>
-
-        <div class="outer">
-            
-                
-
-<aside id="profile">
-    <div class="inner profile-inner">
-        <div class="base-info profile-block">
-            <img id="avatar" src="/css/images/avatar.png" />
-            <h2 id="name">pingao777</h2>
-            <h3 id="title">Web Developer</h3>
-            <span id="location"><i class="fa fa-map-marker"></i>Beijing</span>
-            <a id="follow" target="_blank" href="http://github.com/pingao777">关注我</a>
-        </div>
-        <div class="article-info profile-block">
-            <div class="article-info-block">
-                23
-                <span>文章</span>
-            </div>
-            <div class="article-info-block">
-                29
-                <span>标签</span>
-            </div>
-        </div>
-        
-    </div>
-</aside>
-
-            
-            <section id="main"><article id="post-浅谈Java泛型" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
     
-        <h1 class="article-title" itemprop="name">
-            浅谈Java泛型
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-1-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="浅谈Java泛型" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-11-28T03:03:16.000Z">2017-11-28</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/技术人生/">技术人生</a>
+                </div>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                浅谈Java泛型
+            
         </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2017/11/28/浅谈Java泛型/">
-            <time datetime="2017-11-28T03:03:16.000Z" itemprop="datePublished">2017-11-28</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/技术人生/">技术人生</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Java/">Java</a>, <a class="tag-link" href="/tags/泛型/">泛型</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
+        <div class="content">
             <p>相信每个Java程序员对泛型都不陌生，不少人也用过泛型，但是泛型中确实有些点容易让人迷惑，下面我结合自己的使用经历和理解谈谈对泛型的认识，不求面面俱到，但求切中要害。</p>
 <a id="more"></a>
 <h3 id="一、泛型是什么"><a href="#一、泛型是什么" class="headerlink" title="一、泛型是什么"></a>一、泛型是什么</h3><p>引用Java文档的解释，</p>
@@ -230,161 +165,251 @@ ga('send', 'pageview');
 </blockquote>
 <p>大致的意思就是类型经过参数化的类或接口。</p>
 <h3 id="二、为什么要泛型"><a href="#二、为什么要泛型" class="headerlink" title="二、为什么要泛型"></a>二、为什么要泛型</h3><p>在泛型出现之前你要定义一个存储水果类的列表，你只能这样写，</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">List fruits = <span class="keyword">new</span> ArrayList();</span><br><span class="line">Elephant e = <span class="keyword">new</span> Elephant();</span><br><span class="line">fruits.add(e);</span><br><span class="line">Fruit f = (Fruit) fruits.get(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">List fruits = <span class="hljs-keyword">new</span> ArrayList();</span><br><span class="line">Elephant e = <span class="hljs-keyword">new</span> Elephant();</span><br><span class="line">fruits.add(e);</span><br><span class="line">Fruit f = (Fruit) fruits.get(<span class="hljs-number">0</span>);</span><br></pre></td></tr></table></figure>
 <p>虽然定义了一个名叫fruits的列表，但是你里面存大象也没人管你，只有在运行时你试图将列表的元素赋值给一个水果时才会报错。为了更早的发现这种错误，Java在5.0引入了泛型机制(Generics)。有了泛型上面的程序就可以这么写，</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Fruit&gt; fruits = <span class="keyword">new</span> ArrayList&lt;Fruit&gt;();</span><br><span class="line">Elephant e = <span class="keyword">new</span> Elephant();</span><br><span class="line">fruits.add(e);  <span class="comment">// Compile error</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Fruit&gt; fruits = <span class="hljs-keyword">new</span> ArrayList&lt;Fruit&gt;();</span><br><span class="line">Elephant e = <span class="hljs-keyword">new</span> Elephant();</span><br><span class="line">fruits.add(e);  <span class="hljs-comment">// Compile error</span></span><br></pre></td></tr></table></figure>
 <p>这样当你往水果的列表里塞一个大象时编译器就会报错，而不用等到运行时，而且也避免了显式的转型。</p>
 <h3 id="三、泛型分类"><a href="#三、泛型分类" class="headerlink" title="三、泛型分类"></a>三、泛型分类</h3><p>从程序的层次上，泛型分为泛型类和泛型方法。比如Java中的<code>ArrayList</code>类就是一个泛型类，</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ArrayList</span>&lt;<span class="title">E</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ArrayList</span>&lt;<span class="hljs-title">E</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>而集合工具类<code>Collections</code>中的<code>emptyList</code>方法就是一个泛型方法，</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> &lt;T&gt; <span class="function">List&lt;T&gt; <span class="title">emptyList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (List&lt;T&gt;) EMPTY_LIST;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> &lt;T&gt; <span class="hljs-function">List&lt;T&gt; <span class="hljs-title">emptyList</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> (List&lt;T&gt;) EMPTY_LIST;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>到这里其实没什么要说的。</p>
 <h3 id="四、更进一步"><a href="#四、更进一步" class="headerlink" title="四、更进一步"></a>四、更进一步</h3><h4 id="1、通配符"><a href="#1、通配符" class="headerlink" title="1、通配符?"></a>1、通配符?</h4><p>通配符代表的意思应该是“某个或某些具体但不确定的类型”，首先具体的是指将来要用某个具体的类来替换通配符，其次不确定是指当前还确定不了是哪种具体类型。</p>
 <h4 id="2、边界"><a href="#2、边界" class="headerlink" title="2、边界"></a>2、边界</h4><p>边界也就是某种类型的子类型或父类型，即<code>super</code>定义的下界和<code>extends</code>定义的上界。</p>
 <h4 id="3、类型擦除"><a href="#3、类型擦除" class="headerlink" title="3、类型擦除"></a>3、类型擦除</h4><p>如果用一句话解释就是用不用泛型编译后的代码是一样的，更详细更准确的解释是由于泛型是在Java 5.0引入的，为了兼容老版本的Java，编译器会将泛型参数替换为它的边界（上界），如果有多个边界，只保留最左边的，如果没有边界替换为<code>Object</code>，最终保留下来的只有正常的类、接口和方法。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GeneralTest</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">Comparable</span>&lt;<span class="title">T</span>&gt; &amp; <span class="title">Iterable</span>&lt;<span class="title">T</span>&gt; &amp; <span class="title">Serializable</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">test1</span><span class="params">(T t)</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &lt;E&gt; <span class="function"><span class="keyword">void</span> <span class="title">test2</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GeneralTest</span>&lt;<span class="hljs-title">T</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Comparable</span>&lt;<span class="hljs-title">T</span>&gt; &amp; <span class="hljs-title">Iterable</span>&lt;<span class="hljs-title">T</span>&gt; &amp; <span class="hljs-title">Serializable</span>&gt; </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">test1</span><span class="hljs-params">(T t)</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &lt;E&gt; <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">test2</span><span class="hljs-params">(E e)</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>编译后生成的代码为，</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test1</span><span class="params">(T)</span></span>;</span><br><span class="line">    descriptor: (Ljava/lang/Comparable;)V</span><br><span class="line"></span><br><span class="line">&lt;E&gt; <span class="function"><span class="keyword">void</span> <span class="title">test2</span><span class="params">(E)</span></span>;</span><br><span class="line">    descriptor: (Ljava/lang/Object;)V</span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">test1</span><span class="hljs-params">(T)</span></span>;</span><br><span class="line">    descriptor: (Ljava/lang/Comparable;)V</span><br><span class="line"></span><br><span class="line">&lt;E&gt; <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">test2</span><span class="hljs-params">(E)</span></span>;</span><br><span class="line">    descriptor: (Ljava/lang/Object;)V</span><br></pre></td></tr></table></figure>
 <p>可以看到T的边界有三个<code>Comparable&lt;T&gt; &amp; Iterable&lt;T&gt; &amp; Serializable</code>，编译后只保留了<code>Comparable</code>，而且<code>Comparable</code>的泛型<code>&lt;T&gt;</code>也去掉了；<code>test2</code>中的E没有边界，它直接被替换为了<code>Object</code>，而且<code>test2</code>作为泛型方法编译后也没有任何泛型的信息。</p>
 <h4 id="4、替换原则"><a href="#4、替换原则" class="headerlink" title="4、替换原则"></a>4、替换原则</h4><p>一个类型的变量可以接受子类型的变量，一个据有某种参数的方法可以在参数的子类型上调用。这个原则几乎是面向对象编程的基础，它可以让我们这么写代码，</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Fruit a = <span class="keyword">new</span> Apple();</span><br><span class="line">List l = <span class="keyword">new</span> ArrayList();</span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Fruit a = <span class="hljs-keyword">new</span> Apple();</span><br><span class="line">List l = <span class="hljs-keyword">new</span> ArrayList();</span><br></pre></td></tr></table></figure>
 <p>可以把一个“苹果”赋值给“水果”，可以把<code>ArrayList</code>赋值给<code>List</code>。</p>
 <h4 id="5、PECS原则"><a href="#5、PECS原则" class="headerlink" title="5、PECS原则"></a>5、PECS原则</h4><p>也就是所谓的Producer Extends, Consumer Super原则，作为生产者时使用<code>extends</code>，作为消费者时使用<code>super</code>，这条原则其实是替换原则的推论。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">List&lt;??&gt; list = Arrays.asList(<span class="number">1</span>, <span class="number">1.3</span>, <span class="number">5L</span>);</span><br><span class="line">Number i = list.get(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">Map&lt;String, ??r&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">map.put(<span class="string">"212"</span>, <span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">List&lt;??&gt; list = Arrays.asList(<span class="hljs-number">1</span>, <span class="hljs-number">1.3</span>, <span class="hljs-number">5L</span>);</span><br><span class="line">Number i = list.get(<span class="hljs-number">0</span>);</span><br><span class="line"></span><br><span class="line">Map&lt;String, ??r&gt; map = <span class="hljs-keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">map.put(<span class="hljs-string">"212"</span>, <span class="hljs-number">1</span>);</span><br></pre></td></tr></table></figure>
 <p>比如你想要从<code>list</code>中取出的数据可以赋值给一个<code>Number</code>，根据替换原则，“一个类型的变量可以接受子类型的变量”，你就得定义<code>list</code>中的类型都是<code>Number</code>的子类型。那么如何表示一个<code>Number</code>的子类型呢，因为<code>extends</code>在Java中本来就表示继承的意思，所以很自然的想法就是<code>? extends Number</code>，这恰恰就是正确答案。</p>
 <p>再比如，你想在<code>map</code>值里存储各种数字，根据替换原则，“一个据有某种参数的方法可以在参数的子类型上调用”，也就是你想要<code>put</code>方法适用在各种数字类型上，“各种数字类型”是这里的“子类型”，所以你需要定义<code>map</code>的值是“各种数字类型”的父类型才可以，表示父类Java中同样有个关键字<code>super</code>，所以你可能猜想<code>? super Number</code>表示的就是这个意思，没错，答案就是这个。</p>
 <p>你可以看到，在两种情况下，确定泛型是替换原则中的子类型还是父类型是关键中的关键。这恰恰就是PECS原则的内容，即作为生产者，将泛型传递给别的变量时，使用<code>extends</code>；作为消费者，将别的变量传递给泛型时，使用<code>super</code>。</p>
 <h4 id="6、是泛型方法还是通配符"><a href="#6、是泛型方法还是通配符" class="headerlink" title="6、是泛型方法还是通配符"></a>6、是泛型方法还是通配符</h4><p>在泛型中，经常面临的一个抉择就是是使用泛型方法还是使用通配符。比如下面的方法，</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Collection</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">containsAll</span><span class="params">(Collection&lt;?&gt; c)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">addAll</span><span class="params">(Collection&lt;? extends E&gt; c)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Collection</span>&lt;<span class="hljs-title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">containsAll</span><span class="hljs-params">(Collection&lt;?&gt; c)</span></span>;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">addAll</span><span class="hljs-params">(Collection&lt;? extends E&gt; c)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>如果写成泛型方法，</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Collection</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; <span class="function"><span class="keyword">boolean</span> <span class="title">containsAll</span><span class="params">(Collection&lt;T&gt; c)</span></span>;</span><br><span class="line">    <span class="keyword">public</span> &lt;T extends E&gt; <span class="function"><span class="keyword">boolean</span> <span class="title">addAll</span><span class="params">(Collection&lt;T&gt; c)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Collection</span>&lt;<span class="hljs-title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">public</span> &lt;T&gt; <span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">containsAll</span><span class="hljs-params">(Collection&lt;T&gt; c)</span></span>;</span><br><span class="line">    <span class="hljs-keyword">public</span> &lt;T extends E&gt; <span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">addAll</span><span class="hljs-params">(Collection&lt;T&gt; c)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>可以看到类型参数T在方法中只使用了一次，和别的类型参数也没有关系，和函数返回值也没有关系，所以T在这里就显得有点多余。</p>
 <p>再看另一个例子，</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Collections</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function"><span class="keyword">void</span> <span class="title">copy</span><span class="params">(List&lt;T&gt; dest, List&lt;? extends T&gt; src)</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Collections</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;T&gt; <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">copy</span><span class="hljs-params">(List&lt;T&gt; dest, List&lt;? extends T&gt; src)</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这里的类型参数T就是必须的了，它表明了源列表和目标列表元素的依赖关系，如果没有一个具体的类型参数，这种依赖没法表述。但是如果你写成下面这个样子，就有点画蛇添足了。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Collections</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T, S extends T&gt; <span class="function"><span class="keyword">void</span> <span class="title">copy</span><span class="params">(List&lt;T&gt; dest, List&lt;S&gt; src)</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Collections</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;T, S extends T&gt; <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">copy</span><span class="hljs-params">(List&lt;T&gt; dest, List&lt;S&gt; src)</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>可以说，原则就是尽可能的使用通配符，因为它更加精炼，当通配符达不到目的的时候再使用具体的类型参数。</p>
 <h3 id="五、最后说几句"><a href="#五、最后说几句" class="headerlink" title="五、最后说几句"></a>五、最后说几句</h3><p>Java的泛型远不止这些内容，文中只是我个人使用泛型中比较困惑的点，可能有些地方理解的也不是那么透彻和准确，还请不吝赐教。</p>
 
-        
         </div>
-        <footer class="article-footer">
-            
-    
-
-        </footer>
-    </div>
-    
         
-<nav id="article-nav">
-    
-        <a href="/2017/12/11/一个初级阶段的五子棋ai/" id="article-nav-newer" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">上一篇</strong>
-            <div class="article-nav-title">
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Java/">Java</a>, <a class="has-link-grey -link" href="/tags/泛型/">泛型</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        
+<div class="sharethis-inline-share-buttons"></div>
+<script type='text/javascript' src='//platform-api.sharethis.com/js/sharethis.js#......' async='async'></script>
+
+        
+    </div>
+</div>
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/12/11/一个初级阶段的五子棋ai/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">一个初级阶段的五子棋ai</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/11/18/疏而不漏：随机森林/">
+                <span class="level-item">疏而不漏：随机森林</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
                 
-                    一个初级阶段的五子棋ai
                 
             </div>
-        </a>
-    
-    
-        <a href="/2017/11/18/疏而不漏：随机森林/" id="article-nav-older" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">疏而不漏：随机森林</div>
-        </a>
-    
-</nav>
-
-
-    
-</article>
-
-
-    
-    
-        <section id="comments">
-    <div id="valine-thread"></div>
-</section>
-    
-
-
-</section>
-            
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
                 
-<aside id="sidebar">
-   
-        
-    <div class="widget-wrap">
-        <h3 class="widget-title">分类</h3>
-        <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/七七八八/">七七八八</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术人生/">技术人生</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活生活/">生活生活</a><span class="category-list-count">2</span></li></ul>
-        </div>
-    </div>
-
-    
-        
-    <div class="widget-wrap">
-        <h3 class="widget-title">归档</h3>
-        <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">10</span></li></ul>
-        </div>
-    </div>
-
-    
-        
-    <div class="widget-wrap">
-        <h3 class="widget-title">标签云</h3>
-        <div class="widget tagcloud">
-            <a href="/tags/2018/" style="font-size: 10px;">2018</a> <a href="/tags/Dota/" style="font-size: 10px;">Dota</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Markdown/" style="font-size: 15px;">Markdown</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/Python/" style="font-size: 20px;">Python</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/Vim/" style="font-size: 20px;">Vim</a> <a href="/tags/alpha-beta/" style="font-size: 10px;">alpha-beta</a> <a href="/tags/minimax/" style="font-size: 10px;">minimax</a> <a href="/tags/五子棋/" style="font-size: 10px;">五子棋</a> <a href="/tags/侏罗纪公园/" style="font-size: 10px;">侏罗纪公园</a> <a href="/tags/决策树/" style="font-size: 10px;">决策树</a> <a href="/tags/加密/" style="font-size: 15px;">加密</a> <a href="/tags/数据挖掘/" style="font-size: 10px;">数据挖掘</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/机器学习/" style="font-size: 20px;">机器学习</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/碟中谍/" style="font-size: 10px;">碟中谍</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/统计/" style="font-size: 20px;">统计</a> <a href="/tags/解密/" style="font-size: 15px;">解密</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a> <a href="/tags/随机森林/" style="font-size: 10px;">随机森林</a>
-        </div>
-    </div>
-
-    
-    <div id="toTop" class="fa fa-angle-up"></div>
-</aside>
-
+                    <img src="/images/logo.png" alt="浅谈Java泛型" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2018 pingao777&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="http://github.com/ppoffice/hexo-theme-icarus">Icarus</a>
+                </p>
+            </div>
+            <div class="level-end">
             
-        </div>
-        <footer id="footer">
-    <div class="outer">
-        <div id="footer-info" class="inner">
-            &copy; 2018 pingao777<br>
-            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
         </div>
     </div>
 </footer>
-        
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
     
-    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-    <script src="//cdn.jsdelivr.net/gh/xcss/valine@v1.1.6/dist/Valine.min.js"></script>
-    <script>
-        new Valine({
-            el: '#valine-thread' ,
-            notify:false,
-            verify:false,
-            app_id: '0uUtzN1bmW45lEsXVGDMaekE-gzGzoHsz',
-            app_key: 'SiD0cv45eP3ptV9yXuif6K9V',
-            placeholder: 'cn dota best dota'
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
         });
-    </script>
-
-
+    });
+</script>
 
 
     
     
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] },
+        'HTML-CSS': {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+});
+</script>
+
+
     
-        <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
-        </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
     
 
 
+<script src="/js/main.js" defer></script>
 
-<!-- Custom Scripts -->
-<script src="/js/main.js"></script>
-
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
     </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
 </body>
 </html>

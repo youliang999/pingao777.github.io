@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang=zh>
+<html  lang="zh">
 <head>
     <meta charset="utf-8">
-    
-    <title>三生万物：决策树 | 瞎说</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>三生万物：决策树 - 瞎说</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+
+
     <meta name="description" content="一、概述不知怎么回事，提到决策树我就想起”道生一，一生二，二生三，三生万物“这句话，大概是因为决策树从一个根节点慢慢“长”成一棵树，也要经历“一生二，二生三”的过程。决策树本质上就是一种二叉树，根据特定的标准不停的分成左右两个子树，直到符合某种条件停止。树算法解释性强、简单直观以及接近人的决策方式使它成为流行的机器学习算法之一。当决策树与装袋法(Bag)、提升法(Boosting)结合之后，可以成">
 <meta name="keywords" content="决策树,机器学习">
 <meta property="og:type" content="article">
@@ -13,223 +15,156 @@
 <meta property="og:site_name" content="瞎说">
 <meta property="og:description" content="一、概述不知怎么回事，提到决策树我就想起”道生一，一生二，二生三，三生万物“这句话，大概是因为决策树从一个根节点慢慢“长”成一棵树，也要经历“一生二，二生三”的过程。决策树本质上就是一种二叉树，根据特定的标准不停的分成左右两个子树，直到符合某种条件停止。树算法解释性强、简单直观以及接近人的决策方式使它成为流行的机器学习算法之一。当决策树与装袋法(Bag)、提升法(Boosting)结合之后，可以成">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://ozgrgjwvp.bkt.clouddn.com/tree%20example.jpg">
-<meta property="og:image" content="http://ozgrgjwvp.bkt.clouddn.com/1-1%20Errors%20of%20different%20node%20size.png">
-<meta property="og:image" content="http://ozgrgjwvp.bkt.clouddn.com/1-2%20Decision%20boundary%20of%20different%20node%20size.png">
-<meta property="og:image" content="http://ozgrgjwvp.bkt.clouddn.com/1-3%20Best%20decision%20boundary%20for%20iris.png">
-<meta property="og:image" content="http://ozgrgjwvp.bkt.clouddn.com/iris%20tree.jpg">
-<meta property="og:image" content="http://ozgrgjwvp.bkt.clouddn.com/1-4%201-R2%20of%20different%20node%20size.png">
-<meta property="og:image" content="http://ozgrgjwvp.bkt.clouddn.com/1-5%20Regression%20relative%20deviation%20for%20houses.png">
-<meta property="og:updated_time" content="2018-07-21T12:14:13.285Z">
+<meta property="og:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/tree%20example.jpg">
+<meta property="og:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/1-1%20Errors%20of%20different%20node%20size.png">
+<meta property="og:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/1-2%20Decision%20boundary%20of%20different%20node%20size.png">
+<meta property="og:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/1-3%20Best%20decision%20boundary%20for%20iris.png">
+<meta property="og:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/iris%20tree.jpg">
+<meta property="og:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/1-4%201-R2%20of%20different%20node%20size.png">
+<meta property="og:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/1-5%20Regression%20relative%20deviation%20for%20houses.png">
+<meta property="og:updated_time" content="2018-11-30T12:55:26.058Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="三生万物：决策树">
 <meta name="twitter:description" content="一、概述不知怎么回事，提到决策树我就想起”道生一，一生二，二生三，三生万物“这句话，大概是因为决策树从一个根节点慢慢“长”成一棵树，也要经历“一生二，二生三”的过程。决策树本质上就是一种二叉树，根据特定的标准不停的分成左右两个子树，直到符合某种条件停止。树算法解释性强、简单直观以及接近人的决策方式使它成为流行的机器学习算法之一。当决策树与装袋法(Bag)、提升法(Boosting)结合之后，可以成">
-<meta name="twitter:image" content="http://ozgrgjwvp.bkt.clouddn.com/tree%20example.jpg">
-    
+<meta name="twitter:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/tree%20example.jpg">
 
-    
 
-    
-        <link rel="icon" href="/favicon.ico" />
-    
 
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/libs/open-sans/styles.css">
-    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
 
-    <link rel="stylesheet" href="/css/style.css">
 
-    <script src="https://cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
-    
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai-sublime.css">
+
+
     
     
     
-        <script type="text/javascript">
-(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
 
-ga('create', 'UA-44085500-1', 'auto');
-ga('send', 'pageview');
-
-</script>
     
     
     
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
 
 
-</head>
+    
+    
 
-<body>
-    <div id="container">
-        <header id="header">
-    <div id="header-main" class="header-inner">
-        <div class="outer">
-            <a href="/" id="logo">
-                <i class="logo"></i>
-                <span class="site-title">瞎说</span>
-            </a>
-            <nav id="main-nav">
-                
-                    <a class="main-nav-link" href="/.">主页</a>
-                
-                    <a class="main-nav-link" href="/archives">时间线</a>
-                
-                    <a class="main-nav-link" href="/categories">分类</a>
-                
-                    <a class="main-nav-link" href="/tags">标签</a>
-                
-                    <a class="main-nav-link" href="/about">关于我</a>
-                
-            </nav>
-            
-                
-                <nav id="sub-nav">
-                    <div class="profile" id="profile-nav">
-                        <a id="profile-anchor" href="javascript:;">
-                            <img class="avatar" src="/css/images/avatar.png" />
-                            <i class="fa fa-caret-down"></i>
-                        </a>
-                    </div>
-                </nav>
-            
-            <div id="search-form-wrap">
+    
+    
 
-    <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
-        <button type="submit" class="search-form-submit"></button>
-    </form>
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-44085500-1"></script>
 <script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: '文章',
-            PAGES: '页面',
-            CATEGORIES: '分类',
-            TAGS: '标签',
-            UNTITLED: '(未命名)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-44085500-1');
 </script>
-<script src="/js/insight.js"></script>
 
-</div>
-        </div>
-    </div>
-    <div id="main-nav-mobile" class="header-sub header-inner">
-        <table class="menu outer">
-            <tr>
-                
-                    <td><a class="main-nav-link" href="/.">主页</a></td>
-                
-                    <td><a class="main-nav-link" href="/archives">时间线</a></td>
-                
-                    <td><a class="main-nav-link" href="/categories">分类</a></td>
-                
-                    <td><a class="main-nav-link" href="/tags">标签</a></td>
-                
-                    <td><a class="main-nav-link" href="/about">关于我</a></td>
-                
-                <td>
-                    
-    <div class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
-    </div>
 
-                </td>
-            </tr>
-        </table>
-    </div>
-</header>
-
-        <div class="outer">
-            
-                
-
-<aside id="profile">
-    <div class="inner profile-inner">
-        <div class="base-info profile-block">
-            <img id="avatar" src="/css/images/avatar.png" />
-            <h2 id="name">pingao777</h2>
-            <h3 id="title">Web Developer</h3>
-            <span id="location"><i class="fa fa-map-marker"></i>Beijing</span>
-            <a id="follow" target="_blank" href="http://github.com/pingao777">关注我</a>
-        </div>
-        <div class="article-info profile-block">
-            <div class="article-info-block">
-                23
-                <span>文章</span>
-            </div>
-            <div class="article-info-block">
-                29
-                <span>标签</span>
-            </div>
-        </div>
-        
-    </div>
-</aside>
-
-            
-            <section id="main"><article id="post-三生万物：决策树" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
     
-        <h1 class="article-title" itemprop="name">
-            三生万物：决策树
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-1-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="三生万物：决策树" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-11-15T13:36:34.000Z">2017-11-15</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/技术人生/">技术人生</a>
+                </div>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                三生万物：决策树
+            
         </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2017/11/15/三生万物：决策树/">
-            <time datetime="2017-11-15T13:36:34.000Z" itemprop="datePublished">2017-11-15</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/技术人生/">技术人生</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/决策树/">决策树</a>, <a class="tag-link" href="/tags/机器学习/">机器学习</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
+        <div class="content">
             <h3 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h3><p>不知怎么回事，提到决策树我就想起”道生一，一生二，二生三，三生万物“这句话，大概是因为决策树从一个根节点慢慢“长”成一棵树，也要经历“一生二，二生三”的过程。决策树本质上就是一种二叉树，根据特定的标准不停的分成左右两个子树，直到符合某种条件停止。树算法解释性强、简单直观以及接近人的决策方式使它成为流行的机器学习算法之一。当决策树与装袋法(Bag)、提升法(Boosting)结合之后，可以成为更强大的算法。</p>
 <a id="more"></a>
 <p>决策树按响应值的类型大致分为分类树和回归树，实现决策树的方法也很多，比如CART、ID3、C4.5等等，本文将对CART这种算法进行介绍。</p>
@@ -379,147 +314,237 @@ ga('send', 'pageview');
 <p>性别=女：1/2 x (1 x 0) + 1/2 x (1 x 0) = 0</p>
 <p>性别=男：1/2 x (1 x 0) + 1/2 x (1 x 0) = 0</p>
 <p>选择“性别=女”这个条件，至此所有的子树的响应值都是唯一的，停止分裂。</p>
-<p>最终这个分类树的样子大概如下，<br><img src="http://ozgrgjwvp.bkt.clouddn.com/tree%20example.jpg" alt=""></p>
+<p>最终这个分类树的样子大概如下，<br><img src="https://wocanmei-hexo.nos-eastchina1.126.net/tree%20example.jpg" alt=""></p>
 <h3 id="三、树的剪枝"><a href="#三、树的剪枝" class="headerlink" title="三、树的剪枝"></a>三、树的剪枝</h3><p>其实树的剪枝就是正则化，剪枝一般分为两种：一种称为预剪枝，通过设置Node Size的大小来达到控制树的分枝个数的目的，这种方式简单易用，但有短视的风险；另一种称为后剪枝，原理是让树充分“生长”，然后尝试合并树的分枝，通过对比合并前后错误率是否降低来决定是否真得合并，这种方式效果较前一种好，但是实现稍微复杂一些。</p>
 <h3 id="四、说了就练"><a href="#四、说了就练" class="headerlink" title="四、说了就练"></a>四、说了就练</h3><p>俗话说，光说不练假把式，下面我用R语言实现一个决策树，并尝试分析两个实际的数据集。</p>
 <p>1、<a href="https://baike.baidu.com/item/IRIS/4061453?fr=aladdin" target="_blank" rel="external">鸢尾花(iris)</a>数据集，这个数据集包括五个变量：花萼长度(Sepal.Length)，花萼宽度(Sepal.Width)，花瓣长度(Petal.Length)，花瓣宽度(Petal.Width)，种类(Species)，下面尝试使用花萼长度(Sepal.Length)和花萼宽度(Sepal.Width)这两个变量来预测鸢尾花的种类(Species)。</p>
 <p>为了简便，我采用的是预剪枝的方式。那么选择多大的Node Size合适呢？关于这个问题通常的方法就是<strong><a href="https://en.wikipedia.org/wiki/Cross-validation_(statistics" target="_blank" rel="external">交叉验证(Cross-validation)</a>)</strong>。下图是采用10折交叉验证(k-fold cross-validation)得到的错误率,</p>
-<p><img src="http://ozgrgjwvp.bkt.clouddn.com/1-1%20Errors%20of%20different%20node%20size.png" alt=""></p>
+<p><img src="https://wocanmei-hexo.nos-eastchina1.126.net/1-1%20Errors%20of%20different%20node%20size.png" alt=""></p>
 <p>可以看到，当Node Size为40的时候测试集的错误率Eout最低，从另一个方面也可以看到如果不进行剪枝，Eout约为0.4，比剪枝后的错误率高了将近0.2。从下面的第一张图也可以直观的看到当Node Size从小到大增加时，分类边界(Decision Boundary)从过拟合(Overfit)到欠拟合(Underfit)的变化趋势。第二张图是根据交叉验证得到的最佳分类边界，它和Node Size为30的分类边界非常相似。</p>
-<p><img src="http://ozgrgjwvp.bkt.clouddn.com/1-2%20Decision%20boundary%20of%20different%20node%20size.png" alt=""></p>
-<p><img src="http://ozgrgjwvp.bkt.clouddn.com/1-3%20Best%20decision%20boundary%20for%20iris.png" alt=""></p>
+<p><img src="https://wocanmei-hexo.nos-eastchina1.126.net/1-2%20Decision%20boundary%20of%20different%20node%20size.png" alt=""></p>
+<p><img src="https://wocanmei-hexo.nos-eastchina1.126.net/1-3%20Best%20decision%20boundary%20for%20iris.png" alt=""></p>
 <p>最终的错误率约为0.2，从上面第二张图可以看到versicolor和virginica这两类的鸢尾花有些数据在二维空间完全重合在了一起，仅仅依靠花萼长度(Sepal.Length)，花萼宽度(Sepal.Width)这两个变量是无法把它们分开的，这个时候单纯的增加样本数无法进一步提高模型的质量，这个时候最好去寻找新的变量，事实上，当加上花瓣长度(Petal.Length)，花瓣宽度(Petal.Width)这两个变量时，预测的错误率可以降低到0.06左右。</p>
 <p>树的样子如下，</p>
-<p><img src="http://ozgrgjwvp.bkt.clouddn.com/iris%20tree.jpg" alt=""></p>
+<p><img src="https://wocanmei-hexo.nos-eastchina1.126.net/iris%20tree.jpg" alt=""></p>
 <p>2、上面是个分类问题，那么再看一个回归问题。<a href="https://pingao777.github.io/2017/11/16/%E5%BD%93Python%E5%92%8CR%E9%81%87%E4%B8%8A%E5%8C%97%E4%BA%AC%E4%BA%8C%E6%89%8B%E6%88%BF%EF%BC%88%E4%B8%8A%EF%BC%89/">北京二手房</a>这个数据集有13个特征，下面使用决策树根据房子的区域(area)、是否学区(school)、是否有地铁(subway)、总价(num)这四个变量来预测房价(price)。</p>
 <p>同样，祭出我们的法宝交叉验证得到一个合适的Node Size，如下所示，</p>
-<p><img src="http://ozgrgjwvp.bkt.clouddn.com/1-4%201-R2%20of%20different%20node%20size.png" alt=""></p>
+<p><img src="https://wocanmei-hexo.nos-eastchina1.126.net/1-4%201-R2%20of%20different%20node%20size.png" alt=""></p>
 <p>对于回归,我采用了<strong><a href="https://en.wikipedia.org/wiki/Coefficient_of_determination" target="_blank" rel="external">决策系数R2</a></strong>作为衡量模型效果的标准，由于R2是越大越好，且0&lt;R2&lt;1，所以这里用1-R2作为模型的误差。和分类树类似，当Node Size从小到大的过程中，模型呈现出了从过拟合到欠拟合的变化过程，显然，当Node Size约为100的时候模型效果是最好的。下图是Node Size为100时从29790条数据中随机选取了10000条进行训练得到的模型，用这个模型预测所有29790条房屋的房价，相对误差((预测房价-实际房价)/实际房价)如下所示，</p>
-<p><img src="http://ozgrgjwvp.bkt.clouddn.com/1-5%20Regression%20relative%20deviation%20for%20houses.png" alt=""></p>
+<p><img src="https://wocanmei-hexo.nos-eastchina1.126.net/1-5%20Regression%20relative%20deviation%20for%20houses.png" alt=""></p>
 <p>得到的决策系数R2约为0.7，也就是区域、是否学区、是否有地铁、总价这四个变量解释了70%房价变异。由这个相对误差图可以看出大部分的数据都落在了0附近，实际上有20275条数据落在[-0.2,0.2]，28379条数据落在[-0.5,0.5]。那么，那些误差比较大的都是些什么数据呢？</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">下面的数据为相对误差大于3的</span><br><span class="line">area region zone meters direction con floor year school subway tax num price</span><br><span class="line">海淀 东小营甲1号 5室2厅 350 南 西北旺二手房 低楼层 1998 无学区 无地铁 非免税 280  8000</span><br><span class="line">朝阳 北苑家园望春园 1室0厅 36 南北 北苑二手房 地下室 2008 无学区 无地铁 非免税  20  5556</span><br><span class="line">昌平 香堂文化新村二期 5室4厅 460 南北 昌平其它二手房 低楼层 2010 无学区 无地铁 非免税 220 4783</span><br><span class="line">昌平 东亚上北中心 1室0厅 738 北 回龙观二手房 地下室 2007 无学区 无地铁 非免税 370  5012</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">下面的数据为相对误差大于3的</span><br><span class="line">area region zone meters direction con floor year school subway tax num price</span><br><span class="line">海淀 东小营甲1号 5室2厅 350 南 西北旺二手房 低楼层 1998 无学区 无地铁 非免税 280  8000</span><br><span class="line">朝阳 北苑家园望春园 1室0厅 36 南北 北苑二手房 地下室 2008 无学区 无地铁 非免税  20  5556</span><br><span class="line">昌平 香堂文化新村二期 5室4厅 460 南北 昌平其它二手房 低楼层 2010 无学区 无地铁 非免税 220 4783</span><br><span class="line">昌平 东亚上北中心 1室0厅 738 北 回龙观二手房 地下室 2007 无学区 无地铁 非免税 370  5012</span><br></pre></td></tr></table></figure>
 <p>感觉这些数据好像异常数据，北京还有低于1万的房价？！</p>
 <h3 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h3><p>当一个小小的种子慢慢成长为一颗参天大树，独霸森林一方，常常让人感受生命的强大，而决策树算法同样让人惊叹，易于实现又足够灵活，既能用于分类又能用于回归，也在机器学习领域赢得了一席之地。本文简单介绍了决策树的算法和剪枝，在此基础上用R实现了一个决策树，并在两个数据集上进行了测验，证实了决策树的能力。</p>
 
-        
         </div>
-        <footer class="article-footer">
-            
-    
-
-        </footer>
-    </div>
-    
         
-<nav id="article-nav">
-    
-        <a href="/2017/11/16/他们征友（婚）时，他们征什么？/" id="article-nav-newer" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">上一篇</strong>
-            <div class="article-nav-title">
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/决策树/">决策树</a>, <a class="has-link-grey -link" href="/tags/机器学习/">机器学习</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        
+<div class="sharethis-inline-share-buttons"></div>
+<script type='text/javascript' src='//platform-api.sharethis.com/js/sharethis.js#......' async='async'></script>
+
+        
+    </div>
+</div>
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/11/16/他们征友（婚）时，他们征什么？/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">他们征友（婚）时，他们征什么？</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/11/14/VIM中的正则表达式/">
+                <span class="level-item">VIM中的正则表达式</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
                 
-                    他们征友（婚）时，他们征什么？
                 
             </div>
-        </a>
-    
-    
-        <a href="/2017/11/14/VIM中的正则表达式/" id="article-nav-older" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">VIM中的正则表达式</div>
-        </a>
-    
-</nav>
-
-
-    
-</article>
-
-
-    
-    
-        <section id="comments">
-    <div id="valine-thread"></div>
-</section>
-    
-
-
-</section>
-            
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
                 
-<aside id="sidebar">
-   
-        
-    <div class="widget-wrap">
-        <h3 class="widget-title">分类</h3>
-        <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/七七八八/">七七八八</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术人生/">技术人生</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活生活/">生活生活</a><span class="category-list-count">2</span></li></ul>
-        </div>
-    </div>
-
-    
-        
-    <div class="widget-wrap">
-        <h3 class="widget-title">归档</h3>
-        <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">10</span></li></ul>
-        </div>
-    </div>
-
-    
-        
-    <div class="widget-wrap">
-        <h3 class="widget-title">标签云</h3>
-        <div class="widget tagcloud">
-            <a href="/tags/2018/" style="font-size: 10px;">2018</a> <a href="/tags/Dota/" style="font-size: 10px;">Dota</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Markdown/" style="font-size: 15px;">Markdown</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/Python/" style="font-size: 20px;">Python</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/Vim/" style="font-size: 20px;">Vim</a> <a href="/tags/alpha-beta/" style="font-size: 10px;">alpha-beta</a> <a href="/tags/minimax/" style="font-size: 10px;">minimax</a> <a href="/tags/五子棋/" style="font-size: 10px;">五子棋</a> <a href="/tags/侏罗纪公园/" style="font-size: 10px;">侏罗纪公园</a> <a href="/tags/决策树/" style="font-size: 10px;">决策树</a> <a href="/tags/加密/" style="font-size: 15px;">加密</a> <a href="/tags/数据挖掘/" style="font-size: 10px;">数据挖掘</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/机器学习/" style="font-size: 20px;">机器学习</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/碟中谍/" style="font-size: 10px;">碟中谍</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/统计/" style="font-size: 20px;">统计</a> <a href="/tags/解密/" style="font-size: 15px;">解密</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a> <a href="/tags/随机森林/" style="font-size: 10px;">随机森林</a>
-        </div>
-    </div>
-
-    
-    <div id="toTop" class="fa fa-angle-up"></div>
-</aside>
-
+                    <img src="/images/logo.png" alt="三生万物：决策树" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2018 pingao777&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="http://github.com/ppoffice/hexo-theme-icarus">Icarus</a>
+                </p>
+            </div>
+            <div class="level-end">
             
-        </div>
-        <footer id="footer">
-    <div class="outer">
-        <div id="footer-info" class="inner">
-            &copy; 2018 pingao777<br>
-            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
         </div>
     </div>
 </footer>
-        
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
     
-    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-    <script src="//cdn.jsdelivr.net/gh/xcss/valine@v1.1.6/dist/Valine.min.js"></script>
-    <script>
-        new Valine({
-            el: '#valine-thread' ,
-            notify:false,
-            verify:false,
-            app_id: '0uUtzN1bmW45lEsXVGDMaekE-gzGzoHsz',
-            app_key: 'SiD0cv45eP3ptV9yXuif6K9V',
-            placeholder: 'cn dota best dota'
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
         });
-    </script>
-
-
+    });
+</script>
 
 
     
     
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] },
+        'HTML-CSS': {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+});
+</script>
+
+
     
-        <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
-        </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
     
 
 
+<script src="/js/main.js" defer></script>
 
-<!-- Custom Scripts -->
-<script src="/js/main.js"></script>
-
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
     </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
 </body>
 </html>

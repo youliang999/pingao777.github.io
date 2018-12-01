@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang=zh>
+<html  lang="zh">
 <head>
     <meta charset="utf-8">
-    
-    <title>一个初级阶段的五子棋ai | 瞎说</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>一个初级阶段的五子棋ai - 瞎说</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+
+
     <meta name="description" content="一、前言16年alpha狗接连击败李世石和柯洁后，自己就有个想法，能不能利用机器学习也鼓捣一个类似的五子棋ai？最初的想法是训练一个机器学习模型，喂给它一些棋局，让它自己能够学会落子规则，能够积累优势，最终取得胜利，而且随着下棋盘数的增加，自身的能力可以进一步的提高。但是传统的机器学习需要输入和响应，对于一局棋输入和响应又是什么呢，搜肠刮肚的把自己知道的的几种算法想了一遍，也在网上查了半天，或者模">
 <meta name="keywords" content="五子棋,minimax,alpha-beta">
 <meta property="og:type" content="article">
@@ -13,217 +15,150 @@
 <meta property="og:site_name" content="瞎说">
 <meta property="og:description" content="一、前言16年alpha狗接连击败李世石和柯洁后，自己就有个想法，能不能利用机器学习也鼓捣一个类似的五子棋ai？最初的想法是训练一个机器学习模型，喂给它一些棋局，让它自己能够学会落子规则，能够积累优势，最终取得胜利，而且随着下棋盘数的增加，自身的能力可以进一步的提高。但是传统的机器学习需要输入和响应，对于一局棋输入和响应又是什么呢，搜肠刮肚的把自己知道的的几种算法想了一遍，也在网上查了半天，或者模">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://ozgrgjwvp.bkt.clouddn.com/2017-12-11-gomoku.gif">
-<meta property="og:updated_time" content="2018-01-11T14:00:11.204Z">
+<meta property="og:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/2017-12-11-gomoku.gif">
+<meta property="og:updated_time" content="2018-11-30T12:55:26.056Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一个初级阶段的五子棋ai">
 <meta name="twitter:description" content="一、前言16年alpha狗接连击败李世石和柯洁后，自己就有个想法，能不能利用机器学习也鼓捣一个类似的五子棋ai？最初的想法是训练一个机器学习模型，喂给它一些棋局，让它自己能够学会落子规则，能够积累优势，最终取得胜利，而且随着下棋盘数的增加，自身的能力可以进一步的提高。但是传统的机器学习需要输入和响应，对于一局棋输入和响应又是什么呢，搜肠刮肚的把自己知道的的几种算法想了一遍，也在网上查了半天，或者模">
-<meta name="twitter:image" content="http://ozgrgjwvp.bkt.clouddn.com/2017-12-11-gomoku.gif">
-    
+<meta name="twitter:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/2017-12-11-gomoku.gif">
 
-    
 
-    
-        <link rel="icon" href="/favicon.ico" />
-    
 
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/libs/open-sans/styles.css">
-    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
 
-    <link rel="stylesheet" href="/css/style.css">
 
-    <script src="https://cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
-    
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai-sublime.css">
+
+
     
     
     
-        <script type="text/javascript">
-(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
 
-ga('create', 'UA-44085500-1', 'auto');
-ga('send', 'pageview');
-
-</script>
     
     
     
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
 
 
-</head>
+    
+    
 
-<body>
-    <div id="container">
-        <header id="header">
-    <div id="header-main" class="header-inner">
-        <div class="outer">
-            <a href="/" id="logo">
-                <i class="logo"></i>
-                <span class="site-title">瞎说</span>
-            </a>
-            <nav id="main-nav">
-                
-                    <a class="main-nav-link" href="/.">主页</a>
-                
-                    <a class="main-nav-link" href="/archives">时间线</a>
-                
-                    <a class="main-nav-link" href="/categories">分类</a>
-                
-                    <a class="main-nav-link" href="/tags">标签</a>
-                
-                    <a class="main-nav-link" href="/about">关于我</a>
-                
-            </nav>
-            
-                
-                <nav id="sub-nav">
-                    <div class="profile" id="profile-nav">
-                        <a id="profile-anchor" href="javascript:;">
-                            <img class="avatar" src="/css/images/avatar.png" />
-                            <i class="fa fa-caret-down"></i>
-                        </a>
-                    </div>
-                </nav>
-            
-            <div id="search-form-wrap">
+    
+    
 
-    <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
-        <button type="submit" class="search-form-submit"></button>
-    </form>
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-44085500-1"></script>
 <script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: '文章',
-            PAGES: '页面',
-            CATEGORIES: '分类',
-            TAGS: '标签',
-            UNTITLED: '(未命名)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-44085500-1');
 </script>
-<script src="/js/insight.js"></script>
 
-</div>
-        </div>
-    </div>
-    <div id="main-nav-mobile" class="header-sub header-inner">
-        <table class="menu outer">
-            <tr>
-                
-                    <td><a class="main-nav-link" href="/.">主页</a></td>
-                
-                    <td><a class="main-nav-link" href="/archives">时间线</a></td>
-                
-                    <td><a class="main-nav-link" href="/categories">分类</a></td>
-                
-                    <td><a class="main-nav-link" href="/tags">标签</a></td>
-                
-                    <td><a class="main-nav-link" href="/about">关于我</a></td>
-                
-                <td>
-                    
-    <div class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
-    </div>
 
-                </td>
-            </tr>
-        </table>
-    </div>
-</header>
-
-        <div class="outer">
-            
-                
-
-<aside id="profile">
-    <div class="inner profile-inner">
-        <div class="base-info profile-block">
-            <img id="avatar" src="/css/images/avatar.png" />
-            <h2 id="name">pingao777</h2>
-            <h3 id="title">Web Developer</h3>
-            <span id="location"><i class="fa fa-map-marker"></i>Beijing</span>
-            <a id="follow" target="_blank" href="http://github.com/pingao777">关注我</a>
-        </div>
-        <div class="article-info profile-block">
-            <div class="article-info-block">
-                23
-                <span>文章</span>
-            </div>
-            <div class="article-info-block">
-                29
-                <span>标签</span>
-            </div>
-        </div>
-        
-    </div>
-</aside>
-
-            
-            <section id="main"><article id="post-一个初级阶段的五子棋ai" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
     
-        <h1 class="article-title" itemprop="name">
-            一个初级阶段的五子棋ai
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-1-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="一个初级阶段的五子棋ai" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-12-11T08:46:03.000Z">2017-12-11</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/技术人生/">技术人生</a>
+                </div>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                一个初级阶段的五子棋ai
+            
         </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2017/12/11/一个初级阶段的五子棋ai/">
-            <time datetime="2017-12-11T08:46:03.000Z" itemprop="datePublished">2017-12-11</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/技术人生/">技术人生</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/alpha-beta/">alpha-beta</a>, <a class="tag-link" href="/tags/minimax/">minimax</a>, <a class="tag-link" href="/tags/五子棋/">五子棋</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
+        <div class="content">
             <h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><p>16年alpha狗接连击败李世石和柯洁后，自己就有个想法，能不能利用机器学习也鼓捣一个类似的五子棋ai？最初的想法是训练一个机器学习模型，喂给它一些棋局，让它自己能够学会落子规则，能够积累优势，最终取得胜利，而且随着下棋盘数的增加，自身的能力可以进一步的提高。但是传统的机器学习需要输入和响应，对于一局棋输入和响应又是什么呢，搜肠刮肚的把自己知道的的几种算法想了一遍，也在网上查了半天，或者模型太复杂，短时间没法掌握相关的知识，或者模型计算代价太高，动辄训练个几天，所谓远水解不了近渴，最好的能一个周末能整出一个初级的ai，能打败我就行，以后有时间功能可以慢慢加，这也是标题的由来。</p>
 <a id="more"></a>
 <h3 id="二、Minimax算法"><a href="#二、Minimax算法" class="headerlink" title="二、Minimax算法"></a>二、Minimax算法</h3><p>对于这种回合制的游戏，传统的方法就是利用minimax算法，那么什么是minimax算法呢，说白了，就是和人在脑子里模拟往下走几步一样，minimax算法也是模拟往下走棋，轮到自己时选自己最有利的，即max，轮到对方时选自己最不利的，即min，直到某一条件终止，然后选择一条对自己最有利的路径。由此可以看到，如果计算资源足够，计算机是可以找到一条可以使己方胜利的路径，但是事实上这是不可能的，以15X15的五子棋为例，大约有225!种可能的走法，想穷举出这么多种可能性，以目前的计算能力是达不到的，所以一般的做法是往下模拟走一定的步数，然后选择一条最优的。</p>
@@ -232,7 +167,7 @@ ga('send', 'pageview');
 <h4 id="2、减少可选的落子位置"><a href="#2、减少可选的落子位置" class="headerlink" title="2、减少可选的落子位置"></a>2、减少可选的落子位置</h4><p>下过五子棋的可能都知道，如果落子的位置离己方和对方的棋子太远是没有意义的，因此我把这个距离限制为2，这样把原来b从225减少到了20~30，这个优化是很可观的。</p>
 <h4 id="3、历史启发"><a href="#3、历史启发" class="headerlink" title="3、历史启发"></a>3、历史启发</h4><p>alpha-beta剪枝的效率是和下一步棋的顺序密切相关，如果最合适的那一步棋总是先计算那么算法的效率可以达到$O(b^\sqrt{d})$，这就相当于同样的时间原来只能往后推算5步，现在可以推算10步，而如果顺序不当，效率和没剪枝的minimax没什么两样。历史启发的原理就是记录那些发生剪枝次数最多的位置，以及得分的极值，赋予它们一定的值，以此来排序。</p>
 <p>最终的核心代码如下，</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">alphaBeta</span><span class="params">(Board board, <span class="keyword">int</span> depth, <span class="keyword">int</span> alpha, <span class="keyword">int</span> beta, Player player)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (board.status().isGameOver() || depth &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> board.evaluate(<span class="keyword">this</span>, <span class="keyword">this</span>.depth - depth);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Board.Pos bestPos = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">int</span> v = (<span class="keyword">this</span> == player) ? Integer.MIN_VALUE : Integer.MAX_VALUE;</span><br><span class="line">    List&lt;Board.Pos&gt; childPos = sortChildPos(board);</span><br><span class="line">    <span class="keyword">for</span> (Board.Pos pos : childPos) &#123;</span><br><span class="line">        Board bd = <span class="keyword">new</span> Board(board);</span><br><span class="line">        bd.mark(pos, player);</span><br><span class="line">        <span class="keyword">int</span> w = alphaBeta(bd, depth - <span class="number">1</span>, alpha, beta, bd.getEnemy(player));</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> == player) &#123;</span><br><span class="line">            <span class="keyword">if</span> (v &lt; w) &#123;</span><br><span class="line">                v = w;</span><br><span class="line">                bestPos = pos;</span><br><span class="line">                <span class="keyword">if</span> (depth == <span class="keyword">this</span>.depth) &#123;</span><br><span class="line">                    <span class="keyword">this</span>.best = <span class="keyword">new</span> Move(v, pos);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            alpha = Integer.max(alpha, w);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (v &gt; w) &#123;</span><br><span class="line">                v = w;</span><br><span class="line">                bestPos = pos;</span><br><span class="line">            &#125;</span><br><span class="line">            beta = Integer.min(beta, w);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (beta &lt;= alpha) &#123;</span><br><span class="line">            <span class="keyword">this</span>.history[pos.getRow()][pos.getCol()] += <span class="number">2</span> &lt;&lt; depth;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (bestPos != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">this</span>.history[bestPos.getRow()][bestPos.getCol()] += <span class="number">2</span> &lt;&lt; depth;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> v;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> <span class="hljs-title">alphaBeta</span><span class="hljs-params">(Board board, <span class="hljs-keyword">int</span> depth, <span class="hljs-keyword">int</span> alpha, <span class="hljs-keyword">int</span> beta, Player player)</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (board.status().isGameOver() || depth &lt;= <span class="hljs-number">0</span>) &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> board.evaluate(<span class="hljs-keyword">this</span>, <span class="hljs-keyword">this</span>.depth - depth);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Board.Pos bestPos = <span class="hljs-keyword">null</span>;</span><br><span class="line">    <span class="hljs-keyword">int</span> v = (<span class="hljs-keyword">this</span> == player) ? Integer.MIN_VALUE : Integer.MAX_VALUE;</span><br><span class="line">    List&lt;Board.Pos&gt; childPos = sortChildPos(board);</span><br><span class="line">    <span class="hljs-keyword">for</span> (Board.Pos pos : childPos) &#123;</span><br><span class="line">        Board bd = <span class="hljs-keyword">new</span> Board(board);</span><br><span class="line">        bd.mark(pos, player);</span><br><span class="line">        <span class="hljs-keyword">int</span> w = alphaBeta(bd, depth - <span class="hljs-number">1</span>, alpha, beta, bd.getEnemy(player));</span><br><span class="line">        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span> == player) &#123;</span><br><span class="line">            <span class="hljs-keyword">if</span> (v &lt; w) &#123;</span><br><span class="line">                v = w;</span><br><span class="line">                bestPos = pos;</span><br><span class="line">                <span class="hljs-keyword">if</span> (depth == <span class="hljs-keyword">this</span>.depth) &#123;</span><br><span class="line">                    <span class="hljs-keyword">this</span>.best = <span class="hljs-keyword">new</span> Move(v, pos);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            alpha = Integer.max(alpha, w);</span><br><span class="line">        &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">            <span class="hljs-keyword">if</span> (v &gt; w) &#123;</span><br><span class="line">                v = w;</span><br><span class="line">                bestPos = pos;</span><br><span class="line">            &#125;</span><br><span class="line">            beta = Integer.min(beta, w);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-keyword">if</span> (beta &lt;= alpha) &#123;</span><br><span class="line">            <span class="hljs-keyword">this</span>.history[pos.getRow()][pos.getCol()] += <span class="hljs-number">2</span> &lt;&lt; depth;</span><br><span class="line">            <span class="hljs-keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">if</span> (bestPos != <span class="hljs-keyword">null</span>) &#123;</span><br><span class="line">        <span class="hljs-keyword">this</span>.history[bestPos.getRow()][bestPos.getCol()] += <span class="hljs-number">2</span> &lt;&lt; depth;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> v;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="五、战力如何"><a href="#五、战力如何" class="headerlink" title="五、战力如何"></a>五、战力如何</h3><p>首先是人机对战，当推算的步数达到4步时，我是没赢过，但是这并不能说明它的战力有多强，只能说明我的水平很臭，但是我的初步目标达到了；其次我让两个同等级的电脑对战50局，战绩如下，</p>
 <table>
 <thead>
@@ -270,7 +205,7 @@ ga('send', 'pageview');
 <li>目前ai不能自我学习，如何让ai自我学习，并逐步变强是另一个方向，这也是重点方向。</li>
 </ol>
 <p>如果想在我的代码上继续前进，请戳<a href="https://github.com/pingao777/NewBe" target="_blank" rel="external">这里</a>，下图是一局电脑对战的动图。</p>
-<p><img src="http://ozgrgjwvp.bkt.clouddn.com/2017-12-11-gomoku.gif" alt=""></p>
+<p><img src="https://wocanmei-hexo.nos-eastchina1.126.net/2017-12-11-gomoku.gif" alt=""></p>
 <p>参考资料：</p>
 <ol>
 <li><a href="https://en.wikipedia.org/wiki/Minimax" target="_blank" rel="external">Minimax</a></li>
@@ -278,125 +213,215 @@ ga('send', 'pageview');
 <li><a href="https://en.wikipedia.org/wiki/Killer_heuristic" target="_blank" rel="external">Killer_heuristic</a></li>
 </ol>
 
-        
         </div>
-        <footer class="article-footer">
-            
-    
-
-        </footer>
-    </div>
-    
         
-<nav id="article-nav">
-    
-        <a href="/2018/05/25/2018中期计划/" id="article-nav-newer" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">上一篇</strong>
-            <div class="article-nav-title">
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/alpha-beta/">alpha-beta</a>, <a class="has-link-grey -link" href="/tags/minimax/">minimax</a>, <a class="has-link-grey -link" href="/tags/五子棋/">五子棋</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        
+<div class="sharethis-inline-share-buttons"></div>
+<script type='text/javascript' src='//platform-api.sharethis.com/js/sharethis.js#......' async='async'></script>
+
+        
+    </div>
+</div>
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/05/25/2018中期计划/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">2018中期计划</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/11/28/浅谈Java泛型/">
+                <span class="level-item">浅谈Java泛型</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
                 
-                    2018中期计划
                 
             </div>
-        </a>
-    
-    
-        <a href="/2017/11/28/浅谈Java泛型/" id="article-nav-older" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">浅谈Java泛型</div>
-        </a>
-    
-</nav>
-
-
-    
-</article>
-
-
-    
-    
-        <section id="comments">
-    <div id="valine-thread"></div>
-</section>
-    
-
-
-</section>
-            
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
                 
-<aside id="sidebar">
-   
-        
-    <div class="widget-wrap">
-        <h3 class="widget-title">分类</h3>
-        <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/七七八八/">七七八八</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术人生/">技术人生</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活生活/">生活生活</a><span class="category-list-count">2</span></li></ul>
-        </div>
-    </div>
-
-    
-        
-    <div class="widget-wrap">
-        <h3 class="widget-title">归档</h3>
-        <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">10</span></li></ul>
-        </div>
-    </div>
-
-    
-        
-    <div class="widget-wrap">
-        <h3 class="widget-title">标签云</h3>
-        <div class="widget tagcloud">
-            <a href="/tags/2018/" style="font-size: 10px;">2018</a> <a href="/tags/Dota/" style="font-size: 10px;">Dota</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Markdown/" style="font-size: 15px;">Markdown</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/Python/" style="font-size: 20px;">Python</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/Vim/" style="font-size: 20px;">Vim</a> <a href="/tags/alpha-beta/" style="font-size: 10px;">alpha-beta</a> <a href="/tags/minimax/" style="font-size: 10px;">minimax</a> <a href="/tags/五子棋/" style="font-size: 10px;">五子棋</a> <a href="/tags/侏罗纪公园/" style="font-size: 10px;">侏罗纪公园</a> <a href="/tags/决策树/" style="font-size: 10px;">决策树</a> <a href="/tags/加密/" style="font-size: 15px;">加密</a> <a href="/tags/数据挖掘/" style="font-size: 10px;">数据挖掘</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/机器学习/" style="font-size: 20px;">机器学习</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/碟中谍/" style="font-size: 10px;">碟中谍</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/统计/" style="font-size: 20px;">统计</a> <a href="/tags/解密/" style="font-size: 15px;">解密</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a> <a href="/tags/随机森林/" style="font-size: 10px;">随机森林</a>
-        </div>
-    </div>
-
-    
-    <div id="toTop" class="fa fa-angle-up"></div>
-</aside>
-
+                    <img src="/images/logo.png" alt="一个初级阶段的五子棋ai" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2018 pingao777&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="http://github.com/ppoffice/hexo-theme-icarus">Icarus</a>
+                </p>
+            </div>
+            <div class="level-end">
             
-        </div>
-        <footer id="footer">
-    <div class="outer">
-        <div id="footer-info" class="inner">
-            &copy; 2018 pingao777<br>
-            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
         </div>
     </div>
 </footer>
-        
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
     
-    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-    <script src="//cdn.jsdelivr.net/gh/xcss/valine@v1.1.6/dist/Valine.min.js"></script>
-    <script>
-        new Valine({
-            el: '#valine-thread' ,
-            notify:false,
-            verify:false,
-            app_id: '0uUtzN1bmW45lEsXVGDMaekE-gzGzoHsz',
-            app_key: 'SiD0cv45eP3ptV9yXuif6K9V',
-            placeholder: 'cn dota best dota'
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
         });
-    </script>
-
-
+    });
+</script>
 
 
     
     
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] },
+        'HTML-CSS': {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+});
+</script>
+
+
     
-        <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
-        </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
     
 
 
+<script src="/js/main.js" defer></script>
 
-<!-- Custom Scripts -->
-<script src="/js/main.js"></script>
-
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
     </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
 </body>
 </html>

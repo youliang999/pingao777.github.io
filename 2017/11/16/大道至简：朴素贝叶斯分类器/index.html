@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang=zh>
+<html  lang="zh">
 <head>
     <meta charset="utf-8">
-    
-    <title>大道至简：朴素贝叶斯分类器 | 瞎说</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>大道至简：朴素贝叶斯分类器 - 瞎说</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+
+
     <meta name="description" content="万物之始,大道至简,衍化至繁。 　　　　　　　——ifelse(is.element(this, 道德经), 道德经, unknown)  一、背景提到贝叶斯分类，首先来看下贝叶斯其人，贝叶斯(Thomas Bayes,1701—1761)英国牧师、业余数学家。可别小看了欧洲的牧师，孟德尔，被誉为“遗传学之父”也曾为一名神父，假如你不记得孟德尔是谁，那么你肯定记得高中生物上那个著名的豌豆实验。">
 <meta name="keywords" content="机器学习,贝叶斯">
 <meta property="og:type" content="article">
@@ -13,221 +15,154 @@
 <meta property="og:site_name" content="瞎说">
 <meta property="og:description" content="万物之始,大道至简,衍化至繁。 　　　　　　　——ifelse(is.element(this, 道德经), 道德经, unknown)  一、背景提到贝叶斯分类，首先来看下贝叶斯其人，贝叶斯(Thomas Bayes,1701—1761)英国牧师、业余数学家。可别小看了欧洲的牧师，孟德尔，被誉为“遗传学之父”也曾为一名神父，假如你不记得孟德尔是谁，那么你肯定记得高中生物上那个著名的豌豆实验。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://ozgrgjwvp.bkt.clouddn.com/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/iris_1,2,3,4.png">
-<meta property="og:image" content="http://ozgrgjwvp.bkt.clouddn.com/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/iris_2.png">
-<meta property="og:image" content="http://ozgrgjwvp.bkt.clouddn.com/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/houses_price,school,area.png">
-<meta property="og:image" content="http://ozgrgjwvp.bkt.clouddn.com/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/houses_price,school,zone,direction,floor,area.png">
-<meta property="og:image" content="http://ozgrgjwvp.bkt.clouddn.com/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/houses_price,school,zone,direction,con,floor,area.png">
-<meta property="og:updated_time" content="2018-07-29T11:45:57.460Z">
+<meta property="og:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/iris_1,2,3,4.png">
+<meta property="og:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/iris_2.png">
+<meta property="og:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/houses_price,school,area.png">
+<meta property="og:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/houses_price,school,zone,direction,floor,area.png">
+<meta property="og:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/houses_price,school,zone,direction,con,floor,area.png">
+<meta property="og:updated_time" content="2018-11-30T12:55:26.064Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="大道至简：朴素贝叶斯分类器">
 <meta name="twitter:description" content="万物之始,大道至简,衍化至繁。 　　　　　　　——ifelse(is.element(this, 道德经), 道德经, unknown)  一、背景提到贝叶斯分类，首先来看下贝叶斯其人，贝叶斯(Thomas Bayes,1701—1761)英国牧师、业余数学家。可别小看了欧洲的牧师，孟德尔，被誉为“遗传学之父”也曾为一名神父，假如你不记得孟德尔是谁，那么你肯定记得高中生物上那个著名的豌豆实验。">
-<meta name="twitter:image" content="http://ozgrgjwvp.bkt.clouddn.com/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/iris_1,2,3,4.png">
-    
+<meta name="twitter:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/iris_1,2,3,4.png">
 
-    
 
-    
-        <link rel="icon" href="/favicon.ico" />
-    
 
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/libs/open-sans/styles.css">
-    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
 
-    <link rel="stylesheet" href="/css/style.css">
 
-    <script src="https://cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
-    
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai-sublime.css">
+
+
     
     
     
-        <script type="text/javascript">
-(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
 
-ga('create', 'UA-44085500-1', 'auto');
-ga('send', 'pageview');
-
-</script>
     
     
     
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
 
 
-</head>
+    
+    
 
-<body>
-    <div id="container">
-        <header id="header">
-    <div id="header-main" class="header-inner">
-        <div class="outer">
-            <a href="/" id="logo">
-                <i class="logo"></i>
-                <span class="site-title">瞎说</span>
-            </a>
-            <nav id="main-nav">
-                
-                    <a class="main-nav-link" href="/.">主页</a>
-                
-                    <a class="main-nav-link" href="/archives">时间线</a>
-                
-                    <a class="main-nav-link" href="/categories">分类</a>
-                
-                    <a class="main-nav-link" href="/tags">标签</a>
-                
-                    <a class="main-nav-link" href="/about">关于我</a>
-                
-            </nav>
-            
-                
-                <nav id="sub-nav">
-                    <div class="profile" id="profile-nav">
-                        <a id="profile-anchor" href="javascript:;">
-                            <img class="avatar" src="/css/images/avatar.png" />
-                            <i class="fa fa-caret-down"></i>
-                        </a>
-                    </div>
-                </nav>
-            
-            <div id="search-form-wrap">
+    
+    
 
-    <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
-        <button type="submit" class="search-form-submit"></button>
-    </form>
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-44085500-1"></script>
 <script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: '文章',
-            PAGES: '页面',
-            CATEGORIES: '分类',
-            TAGS: '标签',
-            UNTITLED: '(未命名)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-44085500-1');
 </script>
-<script src="/js/insight.js"></script>
 
-</div>
-        </div>
-    </div>
-    <div id="main-nav-mobile" class="header-sub header-inner">
-        <table class="menu outer">
-            <tr>
-                
-                    <td><a class="main-nav-link" href="/.">主页</a></td>
-                
-                    <td><a class="main-nav-link" href="/archives">时间线</a></td>
-                
-                    <td><a class="main-nav-link" href="/categories">分类</a></td>
-                
-                    <td><a class="main-nav-link" href="/tags">标签</a></td>
-                
-                    <td><a class="main-nav-link" href="/about">关于我</a></td>
-                
-                <td>
-                    
-    <div class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
-    </div>
 
-                </td>
-            </tr>
-        </table>
-    </div>
-</header>
-
-        <div class="outer">
-            
-                
-
-<aside id="profile">
-    <div class="inner profile-inner">
-        <div class="base-info profile-block">
-            <img id="avatar" src="/css/images/avatar.png" />
-            <h2 id="name">pingao777</h2>
-            <h3 id="title">Web Developer</h3>
-            <span id="location"><i class="fa fa-map-marker"></i>Beijing</span>
-            <a id="follow" target="_blank" href="http://github.com/pingao777">关注我</a>
-        </div>
-        <div class="article-info profile-block">
-            <div class="article-info-block">
-                23
-                <span>文章</span>
-            </div>
-            <div class="article-info-block">
-                29
-                <span>标签</span>
-            </div>
-        </div>
-        
-    </div>
-</aside>
-
-            
-            <section id="main"><article id="post-大道至简：朴素贝叶斯分类器" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
     
-        <h1 class="article-title" itemprop="name">
-            大道至简：朴素贝叶斯分类器
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-1-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="大道至简：朴素贝叶斯分类器" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-11-16T13:41:58.000Z">2017-11-16</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/技术人生/">技术人生</a>
+                </div>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                大道至简：朴素贝叶斯分类器
+            
         </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2017/11/16/大道至简：朴素贝叶斯分类器/">
-            <time datetime="2017-11-16T13:41:58.000Z" itemprop="datePublished">2017-11-16</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/技术人生/">技术人生</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/机器学习/">机器学习</a>, <a class="tag-link" href="/tags/贝叶斯/">贝叶斯</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
+        <div class="content">
             <blockquote>
 <p>万物之始,大道至简,衍化至繁。</p>
 <p>　　　　　　　——ifelse(is.element(this, 道德经), 道德经, unknown)</p>
@@ -268,19 +203,19 @@ ga('send', 'pageview');
 <p>三、算法实现</p>
 <p>程序主要由三部分组成：</p>
 <p>分类器主要由下面几个函数组成，具体的代码见<a href="https://github.com/pingao777" target="_blank" rel="external">GitHub</a>。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 1.求各个分类概率P(ycol)</span><br><span class="line">get.ytable &lt;- function(ycol, trainset)</span><br><span class="line"># 2.1求离散属性xcol的条件概率P(xcol|ycol)</span><br><span class="line">get.discrete.xtable &lt;- function(xcol, ycol, trainset)</span><br><span class="line"># 2.2求连续属性xcol的概率密度，假设服从高斯分布</span><br><span class="line">get.continout.xdensity &lt;- function(xcol, ycol, trainset)</span><br><span class="line"># 3.对于某些概率为零的类别，采用Laplace校准设置默认值</span><br><span class="line">get.defaultx &lt;- function(ycol, trainset)</span><br><span class="line"># 注：xcol特征属性，ycol类别属性，trainset训练集</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 1.求各个分类概率P(ycol)</span><br><span class="line">get.ytable &lt;- function(ycol, trainset)</span><br><span class="line"># 2.1求离散属性xcol的条件概率P(xcol|ycol)</span><br><span class="line">get.discrete.xtable &lt;- function(xcol, ycol, trainset)</span><br><span class="line"># 2.2求连续属性xcol的概率密度，假设服从高斯分布</span><br><span class="line">get.continout.xdensity &lt;- function(xcol, ycol, trainset)</span><br><span class="line"># 3.对于某些概率为零的类别，采用Laplace校准设置默认值</span><br><span class="line">get.defaultx &lt;- function(ycol, trainset)</span><br><span class="line"># 注：xcol特征属性，ycol类别属性，trainset训练集</span><br></pre></td></tr></table></figure>
 <p>下面以基础包里的<em>iris</em>数据集验证一下分类器的效果，选取前四列为特征，预测鸢尾花的种类，</p>
-<p><img src="http://ozgrgjwvp.bkt.clouddn.com/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/iris_1,2,3,4.png" alt=""></p>
+<p><img src="https://wocanmei-hexo.nos-eastchina1.126.net/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/iris_1,2,3,4.png" alt=""></p>
 <p>图上有两条曲线，黑色为我实现的贝叶斯分类器，红色虚线为<em>e1071</em>包里的一个贝叶斯分类器实现。观察可得，随着训练集样本数的增加，测试集的分类正确率越来越高。</p>
 <p>再来看看特征属性的选取对正确率的影响，</p>
-<p><img src="http://ozgrgjwvp.bkt.clouddn.com/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/iris_2.png" alt=""></p>
+<p><img src="https://wocanmei-hexo.nos-eastchina1.126.net/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/iris_2.png" alt=""></p>
 <p>这次只选择了第二列（花萼宽度）作为特征值，可以看到正确率明显下降了。</p>
 <p>再来看一个多分类问题，采用<a href="https://pingao777.github.io/2017/11/16/%E5%BD%93Python%E5%92%8CR%E9%81%87%E4%B8%8A%E5%8C%97%E4%BA%AC%E4%BA%8C%E6%89%8B%E6%88%BF%EF%BC%88%E4%B8%8A%EF%BC%89/">北京二手房</a>这个数据集，</p>
-<p><img src="http://ozgrgjwvp.bkt.clouddn.com/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/houses_price,school,area.png" alt=""></p>
+<p><img src="https://wocanmei-hexo.nos-eastchina1.126.net/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/houses_price,school,area.png" alt=""></p>
 <p>通过房价和是否学区这两列来预测房子所在的区，可以看到这两个特征属性的预测正确率稳定在0.4左右，下面再添加户型、朝向、楼层三列，</p>
-<p><img src="http://ozgrgjwvp.bkt.clouddn.com/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/houses_price,school,zone,direction,floor,area.png" alt=""></p>
+<p><img src="https://wocanmei-hexo.nos-eastchina1.126.net/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/houses_price,school,zone,direction,floor,area.png" alt=""></p>
 <p>上图显示，添加了三个特征属性后，正确率并没有明显的改善，但是如果再添加一个区域列(con)，</p>
-<p><img src="http://ozgrgjwvp.bkt.clouddn.com/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/houses_price,school,zone,direction,con,floor,area.png" alt=""></p>
+<p><img src="https://wocanmei-hexo.nos-eastchina1.126.net/%E5%A4%A7%E9%81%93%E8%87%B3%E7%AE%80%EF%BC%9A%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%86%E7%B1%BB%E5%99%A8/houses_price,school,zone,direction,con,floor,area.png" alt=""></p>
 <p>由图观察，添加了区域这一列后，正确率得到了大幅度的提升，事实上仅保留区域这一列，预测的正确率也很高，这是因为区域(con)与区(area)的相关性较强。</p>
 <p>根据我实验的结果，通常情况下，提高预测正确率的方法有两种：</p>
 <ol>
@@ -288,125 +223,215 @@ ga('send', 'pageview');
 <li>选取恰当的特征，注意单纯的增加特征数目并不能提高正确率，反而会引入更多的误差造成过拟合。</li>
 </ol>
 
-        
         </div>
-        <footer class="article-footer">
-            
-    
-
-        </footer>
-    </div>
-    
         
-<nav id="article-nav">
-    
-        <a href="/2017/11/16/当Python和R遇上北京二手房（上）/" id="article-nav-newer" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">上一篇</strong>
-            <div class="article-nav-title">
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/机器学习/">机器学习</a>, <a class="has-link-grey -link" href="/tags/贝叶斯/">贝叶斯</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        
+<div class="sharethis-inline-share-buttons"></div>
+<script type='text/javascript' src='//platform-api.sharethis.com/js/sharethis.js#......' async='async'></script>
+
+        
+    </div>
+</div>
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/11/16/当Python和R遇上北京二手房（上）/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">当Python和R遇上北京二手房（上）</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/11/16/他们征友（婚）时，他们征什么？/">
+                <span class="level-item">他们征友（婚）时，他们征什么？</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
                 
-                    当Python和R遇上北京二手房（上）
                 
             </div>
-        </a>
-    
-    
-        <a href="/2017/11/16/他们征友（婚）时，他们征什么？/" id="article-nav-older" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">他们征友（婚）时，他们征什么？</div>
-        </a>
-    
-</nav>
-
-
-    
-</article>
-
-
-    
-    
-        <section id="comments">
-    <div id="valine-thread"></div>
-</section>
-    
-
-
-</section>
-            
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
                 
-<aside id="sidebar">
-   
-        
-    <div class="widget-wrap">
-        <h3 class="widget-title">分类</h3>
-        <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/七七八八/">七七八八</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术人生/">技术人生</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活生活/">生活生活</a><span class="category-list-count">2</span></li></ul>
-        </div>
-    </div>
-
-    
-        
-    <div class="widget-wrap">
-        <h3 class="widget-title">归档</h3>
-        <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">10</span></li></ul>
-        </div>
-    </div>
-
-    
-        
-    <div class="widget-wrap">
-        <h3 class="widget-title">标签云</h3>
-        <div class="widget tagcloud">
-            <a href="/tags/2018/" style="font-size: 10px;">2018</a> <a href="/tags/Dota/" style="font-size: 10px;">Dota</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Markdown/" style="font-size: 15px;">Markdown</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/Python/" style="font-size: 20px;">Python</a> <a href="/tags/R/" style="font-size: 20px;">R</a> <a href="/tags/Vim/" style="font-size: 20px;">Vim</a> <a href="/tags/alpha-beta/" style="font-size: 10px;">alpha-beta</a> <a href="/tags/minimax/" style="font-size: 10px;">minimax</a> <a href="/tags/五子棋/" style="font-size: 10px;">五子棋</a> <a href="/tags/侏罗纪公园/" style="font-size: 10px;">侏罗纪公园</a> <a href="/tags/决策树/" style="font-size: 10px;">决策树</a> <a href="/tags/加密/" style="font-size: 15px;">加密</a> <a href="/tags/数据挖掘/" style="font-size: 10px;">数据挖掘</a> <a href="/tags/日志/" style="font-size: 10px;">日志</a> <a href="/tags/机器学习/" style="font-size: 20px;">机器学习</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/碟中谍/" style="font-size: 10px;">碟中谍</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/统计/" style="font-size: 20px;">统计</a> <a href="/tags/解密/" style="font-size: 15px;">解密</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a> <a href="/tags/随机森林/" style="font-size: 10px;">随机森林</a>
-        </div>
-    </div>
-
-    
-    <div id="toTop" class="fa fa-angle-up"></div>
-</aside>
-
+                    <img src="/images/logo.png" alt="大道至简：朴素贝叶斯分类器" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2018 pingao777&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="http://github.com/ppoffice/hexo-theme-icarus">Icarus</a>
+                </p>
+            </div>
+            <div class="level-end">
             
-        </div>
-        <footer id="footer">
-    <div class="outer">
-        <div id="footer-info" class="inner">
-            &copy; 2018 pingao777<br>
-            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
         </div>
     </div>
 </footer>
-        
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
     
-    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-    <script src="//cdn.jsdelivr.net/gh/xcss/valine@v1.1.6/dist/Valine.min.js"></script>
-    <script>
-        new Valine({
-            el: '#valine-thread' ,
-            notify:false,
-            verify:false,
-            app_id: '0uUtzN1bmW45lEsXVGDMaekE-gzGzoHsz',
-            app_key: 'SiD0cv45eP3ptV9yXuif6K9V',
-            placeholder: 'cn dota best dota'
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
         });
-    </script>
-
-
+    });
+</script>
 
 
     
     
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] },
+        'HTML-CSS': {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+});
+</script>
+
+
     
-        <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
-        </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
     
 
 
+<script src="/js/main.js" defer></script>
 
-<!-- Custom Scripts -->
-<script src="/js/main.js"></script>
-
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
     </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
 </body>
 </html>
