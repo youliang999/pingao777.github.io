@@ -1,6 +1,6 @@
 ---
 title: 简洁高效的Boyer-Moore算法
-date: 2017-11-16 21:52:42
+date: 2016-07-31 21:40:41
 categories: 技术人生
 tags: 算法
 ---
