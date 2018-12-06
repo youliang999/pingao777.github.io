@@ -4,7 +4,6 @@ date: 2018-12-03 14:27:03
 categories: 技术人生
 tags: [DrRacket, LISP]
 ---
-
 ### 引用其他文件的函数
 
 假设test.scm想引用max-two.scm中的一个函数max-two，可以这样，
@@ -18,6 +17,8 @@ test.scm
 
 (max-two 2 3 4)
 ```
+
+<!--more-->
 
 max-two.scm
 ```scheme
