@@ -1,5 +1,5 @@
 family-sans = "Ubuntu", "Roboto", "Open Sans", "Microsoft YaHei", sans-serif
-family-mono = "Hermit light", "Source Code Pro", monospace, "Microsoft YaHei"
+family-mono = "Hermit medium", "Source Code Pro", monospace, "Microsoft YaHei"
 gap = 64px
 screen-tablet = 769px
 screen-desktop = 1088px
@@ -17,6 +17,11 @@ body
 
 body, button, input, select, textarea
     font-family: family-sans
+
+@font-face {
+    font-family: "Hermit medium";
+    src: url("../libs/hermit-medium.ttf");
+}
 
 @media screen and (min-width: screen-widescreen)
     .is-1-column .container
