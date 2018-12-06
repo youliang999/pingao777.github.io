@@ -11,13 +11,13 @@ Java一直以来都给人留下了笨重的印象，按说插件这种轻量的�
 
 <!--more-->
 
-### 整体思路
+## 整体思路
 
 既然现在Markdown Viewer只能显示不能滚动，那么通过程序将Vim的某种位置信息传给浏览器，然后调用js滚动到这个位置不就可以了吗？想让浏览器显示网页而且网页的内容还得不停的变，需要一个Web服务器，这正是Java的强项。从浏览器到Java的路走通了，但是Vim到Java的路怎么走呢？由于Vim不支持Java，二者怎么通信呢，这时看到著名的胶水语言，编程语言界的媒婆Python是被Vim支持的，方案有了：让Python与Java通信。好，这样整个流程就通了。整体框架如下所示：
 
 ![architecture](https://wocanmei-hexo.nos-eastchina1.126.net/%E8%B0%81%E8%AF%B4%E5%A4%A7%E8%B1%A1%E4%B8%8D%E8%83%BD%E8%B7%B3%E8%88%9E%EF%BC%9A%E5%9F%BA%E4%BA%8EJava%E7%9A%84Markdown%E9%A2%84%E8%A7%88%E6%8F%92%E4%BB%B6/architecture.png)
 
-### Java服务器
+## Java服务器
 
 Web这片领域简直就是Java的主场，自然一点问题没有。以前学过Netty，一直没有派上用场，这次终于可以小试牛刀了。
 
@@ -102,7 +102,7 @@ private class SocketServerHandler extends ChannelInboundHandlerAdapter {
 - close：关闭预览窗口
 - stop：停止Http服务器，退出系统
 
-### Java->浏览器
+## Java->浏览器
 
 ```javascript
 var url = 'ws://127.0.0.1:' + window.location.port + '/ws';
@@ -155,7 +155,7 @@ var sync = function (data) {
 
 大致的流程是浏览器第一次收到服务器消息调用`init`进行初始化，它会将网页的title和页面元素#path置为文件的路径，将.markdown-body清空，因为浏览器刚启动时会启动一个index介绍页面，需要将其清空，然后调用`markdown_refresh`刷新显示新的内容，内容显示后`hightlight_code`负责高亮其中的代码，最后用`scroll_if_possible`滚动到指定位置。往后浏览器每收到服务器消息都会调用`sync`同步信息和位置，`sync`和`init`内部代码差不多，我就不再赘述了。
 
-### Vim->Java
+## Vim->Java
 
 以上走通了Java到浏览器的路，下面看看如何走Vim到Java的路，在整体思路中提到Vim支持Python，所以这条路的主角就是Python，最初是发送Http请求与Java交互，后来又改为使用Socket，原因参看Java服务器那一节。最终的代码如下：
 
@@ -193,11 +193,11 @@ def stop():
 
 下一步就是在Vimscript里调用Python，我就不贴代码了。
 
-### 一步之遥
+## 一步之遥
 
 至此，插件就基本编写完成了，似乎离成功只有一步之遥了，但成功往往没那么简单。运行一下，乍看起来效果还可以，但是存在两个比较严重的问题：
 
-#### MathJax抖动
+### MathJax抖动
 
 每次滚动时，如果页面里包含MathJax表达式，页面就会一抖一抖的。这是因为所有的内容都存在一个`<article></article>`标签里，前端每次加载内容，都要刷新内容里所有的MathJax表达式，表达式加载需要时间，未加载完成时有一个空的占位，加载完成使用真正的元素替换，类似网页中的图片加载流程，占位和真正的元素大小不一致，这样给人的感觉就是页面一抖一抖的，最初用的代码如下：
 
@@ -248,7 +248,7 @@ $.each(units, function (i, u) {
 })
 ```
 
-#### 本地图片不显示
+### 本地图片不显示
 
 由于浏览器安全策略的限制，页面的img标签不能打开本地图片，即形如`<img src='D:\path-to-img.jpg'/>`这种写法浏览器不会加载图片，而是提示“Not allowed to load local resource”。一般在文章未发布到网上时，图片地址往往写一个本地的绝对路径，如果不能显示本地图片的话将会大大影响方便性。那么该怎么办呢，第一种方法是写相对路径，即`<img src='/path-to-img.jpg'/>`，这种方式有很大的局限性，即必须将图片放在一个位置，与网页呈一种相对关系；另一种是写的时候还是写绝对路径，经过程序转成服务器地址，然后通过服务器将图片返给浏览器。显然第二种方式更加灵活，核心代码如下：
 
@@ -270,7 +270,7 @@ private static void transformLocalImgSrc(Element element) {
 
 上面的代码将形如`D:\path-to-img.jpg`的本地路径转成`http://127.0.0.1:7788/image?path=D:\\path-to-img.jpg`(windows系统，其他系统路径与此略有不同)，然后由服务器将图片内容返回。这样就绕过了浏览器的安全策略，实现本地图片的加载了。
 
-### 阳光总在风雨后
+## 阳光总在风雨后
 
 尽管经过了一些风雨，最后还是看到胜利的曙光了。这个项目够小，涵盖的语言和知识并不少，作为一个练手的项目还是不错的，如果碰巧还能给生活提供点便利，何乐而不为呢？想了解大象跳舞的更多细节请戳[github](https://github.com/pingao777/markdown-preview-sync)。
 

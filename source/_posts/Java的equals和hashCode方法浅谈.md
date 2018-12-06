@@ -4,7 +4,7 @@ date: 2018-07-02 16:20:39
 categories: 技术人生
 tags: Java
 ---
-### 一、概述
+## 一、概述
 
 `equals`和`hashCode`作为Java基础经常在面试中提到，比如下面几个问题：
 
@@ -16,7 +16,7 @@ tags: Java
 
 <!--more-->
 
-### 二、equals方法
+## 二、equals方法
 
 先来看见`equals`方法的签名，
 ```java
@@ -131,7 +131,7 @@ public boolean equals(Object obj) {
 1. 使用`==`判断是否为`null`或`this`，如果是前者返回`false`，后者就返回`true`。
 2. 使用`instanceof`检测是否是正确的类型，如果不是直接返回`false`，如果是，强制转换为正确的类型，然后比较与“逻辑等”相关的变量。
 
-### 三、hashCode方法
+## 三、hashCode方法
 
 `hashCode`主要用来在Java中哈希数据结构`HashMap`、`HashSet`生成哈希值，`hashCode`的方法签名，
 
