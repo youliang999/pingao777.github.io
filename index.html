@@ -85,6 +85,7 @@
 
 
 <link rel="stylesheet" href="/css/style.css">
+
 </head>
 <body class="is-1-column">
     <nav class="navbar navbar-main">
@@ -134,6 +135,91 @@
         <div class="container">
             <div class="columns">
                 <div class="column is-12 has-order-2 column-main">
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-12-16T12:11:32.000Z">2018-12-16</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/技术人生/">技术人生</a>
+                </div>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2018/12/16/终于修完Algorithm了/">终于修完Algorithm了</a>
+            
+        </h1>
+        <div class="content">
+            <p>磕磕绊绊，终于把Coursera上的Algorithm课修完了，中间有段时间中断了，因为工作太累，下班或者周末实在不愿意面对电脑了。Algorithm这门课整体难度不大，但是课时较长，所以需要能坚持下来。老师在理论和应用上做了比较好的平衡，不会太枯燥，不少习题也都是为了解决现实中的实际问题设计的，这点我非常喜欢，技术最终是为实际应用服务的，纯理论的东西确实提不起兴趣。</p>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/12/16/终于修完Algorithm了/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-12-03T06:27:03.000Z">2018-12-03</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/技术人生/">技术人生</a>
+                </div>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2018/12/03/DrRacket使用技巧总结/">DrRacket使用技巧总结</a>
+            
+        </h1>
+        <div class="content">
+            <h2 id="引用其他文件的函数"><a href="#引用其他文件的函数" class="headerlink" title="引用其他文件的函数"></a>引用其他文件的函数</h2><p>假设test.scm想引用max-two.scm中的一个函数max-two，可以这样，</p>
+<p>test.scm<br><figure class="highlight scheme hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#lang sicp</span><br><span class="line"></span><br><span class="line">(#%require rackunit)</span><br><span class="line">(#%require <span class="hljs-string">"max-two.scm"</span>)</span><br><span class="line"></span><br><span class="line">(<span class="hljs-name">max-two</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span>)</span><br></pre></td></tr></table></figure></p>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/12/03/DrRacket使用技巧总结/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
     <div class="card">
     
     <div class="card-content article ">
@@ -244,149 +330,6 @@
 
         </div>
         
-        
-        
-    </div>
-</div>
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-08-18T07:33:59.000Z">2018-08-18</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/技术人生/">技术人生</a>
-                </div>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2018/08/18/HTTPS为什么是安全的/">HTTPS为什么是安全的</a>
-            
-        </h1>
-        <div class="content">
-            <p>HTTP我们都知道是超文本传输协议，HTTPS与HTTP一字之差，它到底是什么呢？引用《HTTP权威指南》的介绍：</p>
-<blockquote>
-<p>HTTPS是最常见的HTTP安全版本。它得到了很广泛的应用，所有主要的商业浏览器和服务器上都提供HTTPS。HTTPS将HTTP协议与一组强大的对称、非对称和基于证书的加密技术结合在一起，使得HTTPS不仅很安全，而且很灵活，很容易在处于无序状态的、分散的全球互联网上进行管理。</p>
-</blockquote>
-<p>HTTPS是最常见的HTTP安全版本。多出的S是Security安全的意思，那么它是如何保证安全的呢？</p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2018/08/18/HTTPS为什么是安全的/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-08-17T08:04:11.000Z">2018-08-17</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/技术人生/">技术人生</a>
-                </div>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2018/08/17/加密和解密/">加密和解密</a>
-            
-        </h1>
-        <div class="content">
-            <p>最近学习HTTPS的知识，涉及了一些加密和解密的内容，在Mozilla MDN上找到一篇文章<em><a href="https://developer.mozilla.org/en-US/docs/Archive/Security/Encryption_and_Decryption" target="_blank" rel="external">Encryption and Decryption</a></em>，清晰明了，特地翻译一下，与大家分享。</p>
-<p><strong>加密（Encryption ）</strong>是将原始信息转化为对其他用户非明了信息的过程，除非信息的接受者；<strong>解密（Decryption）</strong>是将非明了信息转化为原始数据的过程。加密算法，也称作<strong>密码</strong>（cipher， 注：与传统意义上的密码不同），是一种用来加密和解密的数学函数。在大多数情况下，会同时采用两个相关的函数，一个用作加密，另一个用作解密。</p>
-<p>当今的大多数加密技术保持信息私密并不依靠算法本身，因为算法都是众所周知的，而是依靠加密和解密的<strong>密钥（key）</strong>。使用正确的密钥进行解密轻而易举，而使用不正确的密钥想进行解密是非常困难的，在某些实际情况下，可以说是不可能的。</p>
-<p>本篇文章将从下面三个方面介绍密钥在加密和解密中的用处：</p>
-<ul>
-<li><p><strong>对称密钥加密（Symmetric-Key Encryption）</strong></p>
-</li>
-<li><p><strong>公钥加密（Public-Key Encryption，也称作非对称密钥加密）</strong></p>
-</li>
-<li><p>密钥长度和加密强度</p>
-</li>
-</ul>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2018/08/17/加密和解密/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-08-15T07:05:58.000Z">2018-08-15</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/技术人生/">技术人生</a>
-                </div>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2018/08/15/数字签名是什么/">数字签名是什么</a>
-            
-        </h1>
-        <div class="content">
-            <p>随着现在网银、电子商务的普及，“数字签名”屡屡被提到，我也曾一度迷惑，直到看到Mozilla MDN上的一篇文章<em><a href="https://developer.mozilla.org/en-US/docs/Archive/Security/Digital_Signatures" target="_blank" rel="external">Digital Signatures</a></em>，下面我将翻译一下这篇文章。</p>
-<p>加密和解密解决了三大互联网安全隐患（窃听、篡改、伪装）之窃听的问题，但是却没法避免信息被篡改。</p>
-<p>本篇文章将向你介绍<strong>公共秘钥加密</strong>如何解决这个问题。</p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2018/08/15/数字签名是什么/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
         
         
     </div>
@@ -547,7 +490,7 @@
             
         </h1>
         <div class="content">
-            <h3 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h3><p><code>equals</code>和<code>hashCode</code>作为Java基础经常在面试中提到，比如下面几个问题：</p>
+            <h2 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h2><p><code>equals</code>和<code>hashCode</code>作为Java基础经常在面试中提到，比如下面几个问题：</p>
 <ol>
 <li><code>equals</code>和<code>==</code>有什么区别？</li>
 <li><code>equals</code>和<code>hashCode</code>有什么关系？</li>
@@ -564,6 +507,41 @@
                 </div>
             </div>
         </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-06-25T02:14:51.000Z">2018-06-25</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/生活生活/">生活生活</a>
+                </div>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2018/06/25/侏罗纪下一部可以叫做We-are-family/">侏罗纪下一部可以叫做We are family</a>
+            
+        </h1>
+        <div class="content">
+            <p>侏罗纪为了续集越来越无耻了，下一部名字都给你们起好了，就叫We are family，影片一开始，人类和恐龙手牵手围成一圈载歌载舞，一片和谐的景象，或许还可以制定个《恐龙人权保护法》什么的。</p>
+
+        </div>
+        
         
         
     </div>

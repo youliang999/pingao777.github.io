@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8">
+<title>Javascript中的原型 - 瞎说</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+
+
+    <meta name="description" content="首先要明确的是，  js中的原型是一个对象，而且这个对象是函数(对象)的一个属性，即prototype。 当以构造函数的形式调用函数时，即new一个函数，会创建一个实例对象，这个实例的__proto__属性会指向构造函数的prototype，由于原型也是对象，所以它也有一个__proto__属性，这个属性指向的是原型对象的构造函数的prototype，这样一步一步上溯到Object.prototy">
+<meta name="keywords" content="Javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Javascript中的原型">
+<meta property="og:url" content="https://pingao777.github.io/2016/03/20/Javascript中的原型/index.html">
+<meta property="og:site_name" content="瞎说">
+<meta property="og:description" content="首先要明确的是，  js中的原型是一个对象，而且这个对象是函数(对象)的一个属性，即prototype。 当以构造函数的形式调用函数时，即new一个函数，会创建一个实例对象，这个实例的__proto__属性会指向构造函数的prototype，由于原型也是对象，所以它也有一个__proto__属性，这个属性指向的是原型对象的构造函数的prototype，这样一步一步上溯到Object.prototy">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/Javascript%E4%B8%AD%E7%9A%84%E5%8E%9F%E5%9E%8B/1-prototype.png">
+<meta property="og:updated_time" content="2018-12-16T05:28:43.462Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Javascript中的原型">
+<meta name="twitter:description" content="首先要明确的是，  js中的原型是一个对象，而且这个对象是函数(对象)的一个属性，即prototype。 当以构造函数的形式调用函数时，即new一个函数，会创建一个实例对象，这个实例的__proto__属性会指向构造函数的prototype，由于原型也是对象，所以它也有一个__proto__属性，这个属性指向的是原型对象的构造函数的prototype，这样一步一步上溯到Object.prototy">
+<meta name="twitter:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/Javascript%E4%B8%AD%E7%9A%84%E5%8E%9F%E5%9E%8B/1-prototype.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai-sublime.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-44085500-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-44085500-1');
+</script>
+
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body class="is-1-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="Javascript中的原型" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2016-03-20T05:28:20.000Z">2016-03-20</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/技术人生/">技术人生</a>
+                </div>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Javascript中的原型
+            
+        </h1>
+        <div class="content">
+            <p>首先要明确的是，</p>
+<ol>
+<li>js中的原型是一个对象，而且这个对象是函数(对象)的一个属性，即prototype。</li>
+<li>当以构造函数的形式调用函数时，即new一个函数，会创建一个实例对象，这个实例的<code>__proto__</code>属性会指向构造函数的prototype，由于原型也是对象，所以它也有一个<code>__proto__</code>属性，这个属性指向的是原型对象的构造函数的prototype，这样一步一步上溯到Object.prototype,Object.prototype对象的<code>__proto__</code>指向的是null，这就形成了一个锁链一样的东西，称为原型链。如果把原型链看做一条河流那么null就是源头了。注意原型prototype是函数的属性而不是实例的。</li>
+<li>当一个函数被创建时，Function构造器产生的函数对象会执行类似的代码：<code>this.prototype = {constructor: this}</code></li>
+</ol>
+<a id="more"></a>
+<p>下面我们用代码来阐述一下上面的结论，假设有这样一段代码：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> Flower = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">name</span>) </span>&#123;<span class="hljs-keyword">this</span>.name = name;&#125;</span><br><span class="line"><span class="hljs-keyword">var</span> f = <span class="hljs-keyword">new</span> Flower(<span class="hljs-string">"flower"</span>);</span><br></pre></td></tr></table></figure>
+<p>那么这段代码的原型链是什么样子的呢？</p>
+<p><img src="https://wocanmei-hexo.nos-eastchina1.126.net/Javascript%E4%B8%AD%E7%9A%84%E5%8E%9F%E5%9E%8B/1-prototype.png" alt="原型链"></p>
+<p>原型链为图中红色虚线，我们用代码验证下我们的猜想，<br><figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// true</span></span><br><span class="line">f.__proto__ === Flower.prototype;</span><br><span class="line"><span class="hljs-comment">// true;</span></span><br><span class="line">Flower.prototype.__proto__ === <span class="hljs-built_in">Object</span>.prototype;</span><br><span class="line"><span class="hljs-comment">// true</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.prototype.__proto__ === <span class="hljs-literal">null</span>;</span><br></pre></td></tr></table></figure></p>
+<p>如果把原型链看做一条河流，那么null那一端就是上游，另一端为下游。我们都知道河流是有方向的，水只能由上游流向下游，而不能相反。</p>
+<p>那么这个原型链有什么作用呢？它是js继承系统的基础。上面提到，原型也是一个对象，既然是对象就可以拥有属性和方法，但是这个对象有点特殊，如果你往这个对象里添加了属性和方法，处于下游的对象包括原型都会拥有这个属性和方法，甚至会影响到已有的对象。这有点像你往河里面导入一瓶墨水，那么下游很快就会被染上颜色。</p>
+<p>还是老样子，用代码验证下，<br><figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Object</span>.prototype.nishishui = <span class="hljs-string">"wo"</span></span><br><span class="line"><span class="hljs-comment">// "wo"</span></span><br><span class="line">Flower.prototype.nishishui</span><br><span class="line"><span class="hljs-comment">// "wo"</span></span><br><span class="line">Flower.nishishui</span><br><span class="line"><span class="hljs-comment">// "wo"</span></span><br><span class="line">f.nishishui</span><br><span class="line"><span class="hljs-comment">// "[object Object]"</span></span><br><span class="line">f.toString()</span><br></pre></td></tr></table></figure></p>
+<p>我们从来没有在Flower和f上定义nishishui这个属性，但是它们都可以访问到。这是怎么回事呢，实际上当f调用nishishui这个属性时，首先检查自身，当然没有，然后通过<code>__proto__</code>去Flower.prototype中去找发现也没有，最后，以同样的方法找到Object.prototype，发现这小子原来在这里，当然不能放过了。js正是通过这种方式实现自己的继承，例如上面的toString()方法。不过如果原型链过长，会有潜在的性能问题，这个以后再说吧。</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Javascript/">Javascript</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        
+<div class="sharethis-inline-share-buttons"></div>
+<script type='text/javascript' src='//platform-api.sharethis.com/js/sharethis.js#......' async='async'></script>
+
+        
+    </div>
+</div>
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2016/03/25/Oracle中的高水位线/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Oracle中的高水位线</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2016/03/20/统计中的p值/">
+                <span class="level-item">统计中的p值</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="Javascript中的原型" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2018 pingao777&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="http://github.com/ppoffice/hexo-theme-icarus">Icarus</a>
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] },
+        'HTML-CSS': {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+});
+</script>
+
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

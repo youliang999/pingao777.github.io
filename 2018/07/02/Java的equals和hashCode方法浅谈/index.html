@@ -16,7 +16,7 @@
 <meta property="og:description" content="一、概述equals和hashCode作为Java基础经常在面试中提到，比如下面几个问题：  equals和==有什么区别？ equals和hashCode有什么关系？ equals和hashCode如何编写？  对于第一个问题不少人只停留在字符串equals比较的是内容，==比较的是内存地址，而对equals的本质极少过问。第二个问题，大多数都知道答案，也有不少记反了，但是更进一步为什么是那样的">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/Java%E7%9A%84equals%E5%92%8ChashCode%E6%96%B9%E6%B3%95%E6%B5%85%E8%B0%88/hashmap.png">
-<meta property="og:updated_time" content="2018-11-30T12:55:26.052Z">
+<meta property="og:updated_time" content="2018-12-16T05:28:43.464Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java的equals和hashCode方法浅谈">
 <meta name="twitter:description" content="一、概述equals和hashCode作为Java基础经常在面试中提到，比如下面几个问题：  equals和==有什么区别？ equals和hashCode有什么关系？ equals和hashCode如何编写？  对于第一个问题不少人只停留在字符串equals比较的是内容，==比较的是内存地址，而对equals的本质极少过问。第二个问题，大多数都知道答案，也有不少记反了，但是更进一步为什么是那样的">
@@ -89,6 +89,7 @@
 
 
 <link rel="stylesheet" href="/css/style.css">
+
 </head>
 <body class="is-1-column">
     <nav class="navbar navbar-main">
@@ -159,7 +160,7 @@
             
         </h1>
         <div class="content">
-            <h3 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h3><p><code>equals</code>和<code>hashCode</code>作为Java基础经常在面试中提到，比如下面几个问题：</p>
+            <h2 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h2><p><code>equals</code>和<code>hashCode</code>作为Java基础经常在面试中提到，比如下面几个问题：</p>
 <ol>
 <li><code>equals</code>和<code>==</code>有什么区别？</li>
 <li><code>equals</code>和<code>hashCode</code>有什么关系？</li>
@@ -167,7 +168,7 @@
 </ol>
 <p>对于第一个问题不少人只停留在字符串<code>equals</code>比较的是内容，<code>==</code>比较的是内存地址，而对<code>equals</code>的本质极少过问。第二个问题，大多数都知道答案，也有不少记反了，但是更进一步为什么是那样的关系，就不知道了。对于第三个问题，大部分人一上手就把方法签名写错了，就别谈正确的写出实现了。带着这些问题，接下来谈谈自己的一点理解。</p>
 <a id="more"></a>
-<h3 id="二、equals方法"><a href="#二、equals方法" class="headerlink" title="二、equals方法"></a>二、equals方法</h3><p>先来看见<code>equals</code>方法的签名，<br><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">equals</span><span class="hljs-params">(Object obj)</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> (<span class="hljs-keyword">this</span> == obj);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="二、equals方法"><a href="#二、equals方法" class="headerlink" title="二、equals方法"></a>二、equals方法</h2><p>先来看见<code>equals</code>方法的签名，<br><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">equals</span><span class="hljs-params">(Object obj)</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> (<span class="hljs-keyword">this</span> == obj);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>可以看到入参是<code>Object</code>，很多人没有注意到这一点，上来就写错了。equals方法顾名思义就判断对象的相等性，默认实现就是<code>==</code>，那么说到二者的区别，个人理解，<code>equals</code>方法是一种用户定义的“逻辑等”，而<code>==</code>是一种“物理等”，用俗语解释就是，<code>equals</code>判断是否相同，<code>==</code>判断是否一样。</p>
 <p><code>equals</code>方法在编写的时候需要遵循以下原则：</p>
 <ul>
@@ -199,7 +200,7 @@
 <li>使用<code>==</code>判断是否为<code>null</code>或<code>this</code>，如果是前者返回<code>false</code>，后者就返回<code>true</code>。</li>
 <li>使用<code>instanceof</code>检测是否是正确的类型，如果不是直接返回<code>false</code>，如果是，强制转换为正确的类型，然后比较与“逻辑等”相关的变量。</li>
 </ol>
-<h3 id="三、hashCode方法"><a href="#三、hashCode方法" class="headerlink" title="三、hashCode方法"></a>三、hashCode方法</h3><p><code>hashCode</code>主要用来在Java中哈希数据结构<code>HashMap</code>、<code>HashSet</code>生成哈希值，<code>hashCode</code>的方法签名，</p>
+<h2 id="三、hashCode方法"><a href="#三、hashCode方法" class="headerlink" title="三、hashCode方法"></a>三、hashCode方法</h2><p><code>hashCode</code>主要用来在Java中哈希数据结构<code>HashMap</code>、<code>HashSet</code>生成哈希值，<code>hashCode</code>的方法签名，</p>
 <figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">int</span> <span class="hljs-title">hashCode</span><span class="hljs-params">()</span></span>;</span><br></pre></td></tr></table></figure>
 <p>默认实现会将对象的内存地址转化为一个整数，因此只有同一个对象<code>hashCode</code>才一样，即使两个<code>equals</code>返回<code>true</code>的对象<code>hashCode</code>也不一样，如果不进行重写。和<code>equals</code>一样，<code>hashCode</code>也需要满足一些原则：</p>
 <ol>

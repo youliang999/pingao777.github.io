@@ -20,7 +20,7 @@
 <meta property="og:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/2017-11-18-2-3%20Decision%20boundary%20of%20different%20node%20size.png">
 <meta property="og:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/2017-11-18-2-4%20Best%20decision%20boundary%20for%20iris.png">
 <meta property="og:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/2017-11-18-2-6%20Outliers.png">
-<meta property="og:updated_time" content="2018-11-30T12:55:26.071Z">
+<meta property="og:updated_time" content="2018-12-16T05:28:43.497Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="疏而不漏：随机森林">
 <meta name="twitter:description" content="一、概述在三生万物：决策树中我们提到当决策树和装袋法(Bagging)和提升法(Boosting)结合后会成为更强大的算法，那么今天就介绍一种名叫随机森林(Random Forest)的算法，它是将决策树、装袋法以及随机特征选取结合后衍生出的一种增强型的树算法。">
@@ -93,6 +93,7 @@
 
 
 <link rel="stylesheet" href="/css/style.css">
+
 </head>
 <body class="is-1-column">
     <nav class="navbar navbar-main">
@@ -163,7 +164,7 @@
             
         </h1>
         <div class="content">
-            <h3 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h3><p>在<a href="https://pingao777.github.io/2017/11/15/%E4%B8%89%E7%94%9F%E4%B8%87%E7%89%A9%EF%BC%9A%E5%86%B3%E7%AD%96%E6%A0%91/">三生万物：决策树</a>中我们提到当决策树和装袋法(Bagging)和提升法(Boosting)结合后会成为更强大的算法，那么今天就介绍一种名叫随机森林(Random Forest)的算法，它是将决策树、装袋法以及随机特征选取结合后衍生出的一种增强型的树算法。</p>
+            <h2 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h2><p>在<a href="https://pingao777.github.io/2017/11/15/%E4%B8%89%E7%94%9F%E4%B8%87%E7%89%A9%EF%BC%9A%E5%86%B3%E7%AD%96%E6%A0%91/">三生万物：决策树</a>中我们提到当决策树和装袋法(Bagging)和提升法(Boosting)结合后会成为更强大的算法，那么今天就介绍一种名叫随机森林(Random Forest)的算法，它是将决策树、装袋法以及随机特征选取结合后衍生出的一种增强型的树算法。</p>
 <a id="more"></a>
 <p>它有如下特点：</p>
 <ol>
@@ -176,13 +177,13 @@
 <li>还可以用于非监督式学习<br>……</li>
 </ol>
 <p>看到随机森林有这么多的优点，你是不是心动了呢？那么接下来和我一起来认识一下它吧！</p>
-<h3 id="二、算法"><a href="#二、算法" class="headerlink" title="二、算法"></a>二、算法</h3><h4 id="1、基本步骤"><a href="#1、基本步骤" class="headerlink" title="1、基本步骤"></a>1、基本步骤</h4><p>上文提到随机森林不是一种全新的算法，而是几种算法的强强联合。随机森林的构建一般有这么几个步骤：</p>
+<h2 id="二、算法"><a href="#二、算法" class="headerlink" title="二、算法"></a>二、算法</h2><h3 id="1、基本步骤"><a href="#1、基本步骤" class="headerlink" title="1、基本步骤"></a>1、基本步骤</h3><p>上文提到随机森林不是一种全新的算法，而是几种算法的强强联合。随机森林的构建一般有这么几个步骤：</p>
 <ol>
 <li>首先确定树的数量(Tree Size)，而每个树的训练数据通过有放回的抽取原始数据。由于是有放回的抽样，原始数据中约有1/3的量没有被抽到，这些数据称为袋外数据(OOB, Out Of Bag)</li>
 <li>树的树训练数据有了，接下来就该训练了，与决策树不同，这里的树在构建的时候，每一次分裂都要进行随机特征选取，也就是在特征的随机子空间进行分裂，比如一个数据集有5个特征，每次分裂有放回的随机取3(Feature Count)个</li>
 <li>到这里，所有的树都应该构造完成了，森林也就有了，那么怎么对响应值进行预测呢？这就要依靠集体的智慧了，每个树都有一个预测值，对于分类问题，取频率最高的那个值；对于回归问题，取所有值的平均</li>
 </ol>
-<h4 id="2、袋外误差-OOB-Error"><a href="#2、袋外误差-OOB-Error" class="headerlink" title="2、袋外误差(OOB Error)"></a>2、袋外误差(OOB Error)</h4><p>算法作者说OOB Error可以作为测试误差的无偏估计，也就是计算出OOB Error就可以得到测试误差，不用专门把数据专门拿出来一部分作为测试集。下面举例说明如何计算OOB Error，比如我们要在一个有7条数据的数据集上构建一个5棵树的随机森林，那么在步骤1的时候会出现下面这样一张表:</p>
+<h3 id="2、袋外误差-OOB-Error"><a href="#2、袋外误差-OOB-Error" class="headerlink" title="2、袋外误差(OOB Error)"></a>2、袋外误差(OOB Error)</h3><p>算法作者说OOB Error可以作为测试误差的无偏估计，也就是计算出OOB Error就可以得到测试误差，不用专门把数据专门拿出来一部分作为测试集。下面举例说明如何计算OOB Error，比如我们要在一个有7条数据的数据集上构建一个5棵树的随机森林，那么在步骤1的时候会出现下面这样一张表:</p>
 <table>
 <thead>
 <tr>
@@ -254,16 +255,16 @@
 </tbody>
 </table>
 <p>表里的X代表没有选中，√代表选中。对于树1，数据1和7就是OOB，对于树2，数据2和5就是OOB，其他以此类推，那么数据1的预测值由树1和树4决定，数据2的预测值由树2-5来决定，以这样的方式计算出每个数据的预测值，进而得到误差值，即OOB Error。</p>
-<h4 id="3、变量重要性-Variable-Importance"><a href="#3、变量重要性-Variable-Importance" class="headerlink" title="3、变量重要性(Variable Importance)"></a>3、变量重要性(Variable Importance)</h4><p>假设我们已经计算出了OOB Error，一个变量的重要性可以这么计算，将变量打散，然后重新计算打散后的OOB Error，取打散前后OOB Error差值的绝对值，越大代表这个变量越重要。变量重要性在实践过程中非常好用，比如在一个10000维度的数据集选出100个最重要的变量，即数据的降维。</p>
-<h4 id="4、相似性-Proximities"><a href="#4、相似性-Proximities" class="headerlink" title="4、相似性(Proximities)"></a>4、相似性(Proximities)</h4><p>相似性由相似性矩阵体现，相似性矩阵是一个NxN的对称矩阵，它的计算方式如下，如果数据n和数据p同属于同一颗树的同一个叶子节点，那么相似性加1，即proximities[n,p]和proximities[p,n]均加1，最后除以树的数目进行标准化。</p>
-<h4 id="5、离群点-Outliers"><a href="#5、离群点-Outliers" class="headerlink" title="5、离群点(Outliers)"></a>5、离群点(Outliers)</h4><p>有了相似性，也就可以计算离群点了。它基于这样的假设，如果一条数据和其他数据都不相似或者相似性很低，那么这条数据很可能是个离群点。这和人很类似阿，如果一个人不合群，那么他肯定是比较孤立的。不过在我实际操作的过程中，即使计算出了潜在的离群点，如何确定它真的是不是不是那么容易。</p>
+<h3 id="3、变量重要性-Variable-Importance"><a href="#3、变量重要性-Variable-Importance" class="headerlink" title="3、变量重要性(Variable Importance)"></a>3、变量重要性(Variable Importance)</h3><p>假设我们已经计算出了OOB Error，一个变量的重要性可以这么计算，将变量打散，然后重新计算打散后的OOB Error，取打散前后OOB Error差值的绝对值，越大代表这个变量越重要。变量重要性在实践过程中非常好用，比如在一个10000维度的数据集选出100个最重要的变量，即数据的降维。</p>
+<h3 id="4、相似性-Proximities"><a href="#4、相似性-Proximities" class="headerlink" title="4、相似性(Proximities)"></a>4、相似性(Proximities)</h3><p>相似性由相似性矩阵体现，相似性矩阵是一个NxN的对称矩阵，它的计算方式如下，如果数据n和数据p同属于同一颗树的同一个叶子节点，那么相似性加1，即proximities[n,p]和proximities[p,n]均加1，最后除以树的数目进行标准化。</p>
+<h3 id="5、离群点-Outliers"><a href="#5、离群点-Outliers" class="headerlink" title="5、离群点(Outliers)"></a>5、离群点(Outliers)</h3><p>有了相似性，也就可以计算离群点了。它基于这样的假设，如果一条数据和其他数据都不相似或者相似性很低，那么这条数据很可能是个离群点。这和人很类似阿，如果一个人不合群，那么他肯定是比较孤立的。不过在我实际操作的过程中，即使计算出了潜在的离群点，如何确定它真的是不是不是那么容易。</p>
 <p>具体的计算过程如下，定义类别为j的数据n的平均相似性为：</p>
 <p>$$\bar{P}(n) = \sum_{cl(k)=j}prox^2(n,k)$$</p>
 <p>得到非相似性：</p>
 <p>$$Dissimilarity(n) = nsample(j) / \bar{P}(n)$$</p>
 <p>然后在各自的类别中标准化，得到最终的Dissimilarity，算法作者给出的经验值是如果一条数据的Dissimilarity&gt;10，那么可能是一个潜在的离群点。</p>
-<h4 id="6、缺失值"><a href="#6、缺失值" class="headerlink" title="6、缺失值"></a>6、缺失值</h4><p>对于缺失值，传统的方法就是数值变量取均值，分组变量取最多的那一类。而随机森林处理缺失值另有一套：先使用一个不太准确的初始值替换缺失值，然后计算数据间的相似性，数值变量取同一类别非缺失值的相似性加权平均；分组变量取频率最高的值，频率要经过相似性加权，然后重复这一过程4-6次。</p>
-<h3 id="三、案例"><a href="#三、案例" class="headerlink" title="三、案例"></a>三、案例</h3><p>在决策树代码的基础上稍加改动就得到了随机森林，下面检验一下新算法的能力。</p>
+<h3 id="6、缺失值"><a href="#6、缺失值" class="headerlink" title="6、缺失值"></a>6、缺失值</h3><p>对于缺失值，传统的方法就是数值变量取均值，分组变量取最多的那一类。而随机森林处理缺失值另有一套：先使用一个不太准确的初始值替换缺失值，然后计算数据间的相似性，数值变量取同一类别非缺失值的相似性加权平均；分组变量取频率最高的值，频率要经过相似性加权，然后重复这一过程4-6次。</p>
+<h2 id="三、案例"><a href="#三、案例" class="headerlink" title="三、案例"></a>三、案例</h2><p>在决策树代码的基础上稍加改动就得到了随机森林，下面检验一下新算法的能力。</p>
 <p>1、在<a href="https://pingao777.github.io/2017/11/15/%E4%B8%89%E7%94%9F%E4%B8%87%E7%89%A9%EF%BC%9A%E5%86%B3%E7%AD%96%E6%A0%91/">三生万物：决策树</a>里我尝试使用花萼长度(Sepal.Length)和花萼宽度(Sepal.Width)这两个变量来预测鸢尾花的种类(Species)，这里用随机森林试一试。</p>
 <p>首先来看下不同数目的树对分类的影响，下图的分类边界(Decision Boundary)，使用的Node Size为1，特征数Feature Count也为1,</p>
 <p><img src="https://wocanmei-hexo.nos-eastchina1.126.net/2017-11-18-2-1%20Decision%20boundary%20of%20different%20tree%20size.png" alt=""></p>
@@ -274,7 +275,7 @@
 <p>从上面的第一张图，可以看到Node Size从0～100增加时，OOB Error先降后增，且在Node Size为15时达到最低。从第二张图可以看到随机森林分类边界的变化过程，先是轻微的过拟合继而最合适的边界最后严重的欠拟合。第三张图是最合适的分类边界，尽管和决策树一样，预测的错误率都为0.2左右，但是和决策树的分类边界相比，随机森林的边界更平滑。</p>
 <p>2、<a href="https://pingao777.github.io/2017/11/16/%E5%BD%93Python%E5%92%8CR%E9%81%87%E4%B8%8A%E5%8C%97%E4%BA%AC%E4%BA%8C%E6%89%8B%E6%88%BF%EF%BC%88%E4%B8%8A%EF%BC%89/">北京二手房</a></p>
 <p>为了和决策树作对比，我也用随机森林来预测下房价(price)，也是使用区域(area)、是否学区(school)、是否有地铁(subway)、总价(num)这四个变量，使用的参数为树的数目TS=100，特征数Feature Count=4，节点数目Node Size=5，得到的结果如下，</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$r2</span><br><span class="line">[1] 0.7014904</span><br><span class="line"></span><br><span class="line">$importance     </span><br><span class="line">area   0.48257784</span><br><span class="line">num    0.37338239</span><br><span class="line">school 0.08469551</span><br><span class="line">subway 0.04547572</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$r2</span><br><span class="line">[1] 0.7014904</span><br><span class="line"></span><br><span class="line">$importance</span><br><span class="line">area   0.48257784</span><br><span class="line">num    0.37338239</span><br><span class="line">school 0.08469551</span><br><span class="line">subway 0.04547572</span><br></pre></td></tr></table></figure>
 <p>袋外决策系数R2为0.7，使用模型预测所有房屋价格的决策系数为0.74，比决策树的0.7高了4个百分点，大家不要小看了这4个百分点，在机器学习中哪怕1个百分点都要付出很大的努力。况且，我在这里并没有使用交叉验证获取最佳的参数，只是凭经验选取。另外模型还给出了预测房价各个变量的重要性，可以看到决定房价最重要的就是房子所在的区。</p>
 <p>接下来是个分类问题，使用小区(region)、户型(zone)、面积(meters)、朝向(direction)、区域(con)、楼层(floor)、房龄(year)、学区(school)、地铁(subway)、税(tax)、总价(num)、单价(price)来预测区(area)。随机从29790中抽取了10000条数据构造100颗树的随机森林，构建一个100棵树的森林，OOB Error和变量重要性如下，</p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$oob_error</span><br><span class="line">[1] 0.1241</span><br><span class="line"></span><br><span class="line">$importance</span><br><span class="line">con       0.5454</span><br><span class="line">price     0.3717</span><br><span class="line">school    0.1132</span><br><span class="line">year      0.0556</span><br><span class="line">subway    0.0490</span><br><span class="line">region    0.0168</span><br><span class="line">direction 0.0163</span><br><span class="line">meters    0.0043</span><br><span class="line">num       0.0040</span><br><span class="line">zone      0.0026</span><br><span class="line">floor     0.0007</span><br><span class="line">tax       0.0007</span><br></pre></td></tr></table></figure>
@@ -287,7 +288,7 @@
 <p>有两套房子的Dissimilarity&gt;10，看看是什么房子，</p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">region zone meters direction con floor year school subway tax num price area</span><br><span class="line">福成公寓A 3室1厅 135 南北 燕郊城区二手房 低楼层 2004 无学区 无地铁 非免税 405 30000 燕郊</span><br><span class="line">达观别墅 4室2厅 270 南北 燕郊城区二手房 低楼层 2009 无学区 无地铁 非免税 1600 59260 燕郊</span><br></pre></td></tr></table></figure>
 <p>初步看来，这两套房子的总价(num)和价格(price)有点高，是不是这一点让它们鹤立鸡群呢？</p>
-<h3 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h3><p>本文简单介绍了随机森林的特点及算法，并简单分析了iris和北京二手房两个数据集。本文只是抛砖引玉，其实随机森林的还有一些其他的特性，大家可以多多去发掘。</p>
+<h2 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h2><p>本文简单介绍了随机森林的特点及算法，并简单分析了iris和北京二手房两个数据集。本文只是抛砖引玉，其实随机森林的还有一些其他的特性，大家可以多多去发掘。</p>
 <p>参考资料：</p>
 <ol>
 <li><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm" target="_blank" rel="external">Random Forests Leo Breiman and Adele Cutler</a></li>
@@ -328,8 +329,8 @@
         
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2017/11/16/简洁高效的Boyer-Moore算法/">
-                <span class="level-item">简洁高效的Boyer-Moore算法</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/11/11/三生万物：决策树/">
+                <span class="level-item">三生万物：决策树</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>

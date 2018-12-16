@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8">
+<title>Javascript中的this - 瞎说</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+
+
+    <meta name="description" content="对于js的函数有两个特殊的关键字，this和arguments，后者存储的是函数的参数，类似于一个数组。例如如下的函数， 123var testArgus = function() &amp;#123;console.log(arguments);&amp;#125;// [1, 2]testArgus(1,2)">
+<meta name="keywords" content="Javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Javascript中的this">
+<meta property="og:url" content="https://pingao777.github.io/2016/03/27/Javascript中的this/index.html">
+<meta property="og:site_name" content="瞎说">
+<meta property="og:description" content="对于js的函数有两个特殊的关键字，this和arguments，后者存储的是函数的参数，类似于一个数组。例如如下的函数， 123var testArgus = function() &amp;#123;console.log(arguments);&amp;#125;// [1, 2]testArgus(1,2)">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-12-16T05:28:43.460Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Javascript中的this">
+<meta name="twitter:description" content="对于js的函数有两个特殊的关键字，this和arguments，后者存储的是函数的参数，类似于一个数组。例如如下的函数， 123var testArgus = function() &amp;#123;console.log(arguments);&amp;#125;// [1, 2]testArgus(1,2)">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai-sublime.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-44085500-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-44085500-1');
+</script>
+
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body class="is-1-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="Javascript中的this" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2016-03-27T15:07:42.000Z">2016-03-27</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/技术人生/">技术人生</a>
+                </div>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Javascript中的this
+            
+        </h1>
+        <div class="content">
+            <p>对于js的函数有两个特殊的关键字，this和arguments，后者存储的是函数的参数，类似于一个数组。例如如下的函数，</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> testArgus = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;<span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">arguments</span>);&#125;</span><br><span class="line"><span class="hljs-comment">// [1, 2]</span></span><br><span class="line">testArgus(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>)</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>arguments的含义比较明确，而this就不那么直白了，<strong>this指代的是函数运行时所处的上下文</strong>。这句话有两点需要注意：一是this是在运行时决定的，也就是函数在调用之前this的值是不确定的，二是函数所处的上下文，也就是函数运行时所处的环境。</p>
+<p>首先看看什么是上下文，对比下面的代码，注意它们的差别。</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> o = &#123;<span class="hljs-attr">testThis</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;&#125;&#125;;</span><br><span class="line"><span class="hljs-keyword">var</span> b = &#123;<span class="hljs-attr">testThis</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;&#125;()&#125;;</span><br><span class="line">o.testThis();</span><br><span class="line">b.testThis;</span><br></pre></td></tr></table></figure>
+<p>它们的分别会输出什么？事实上，前者会输出Object，也就是o本身；后者会输出window，也就是全局对象。如果感到疑惑，再看《JavaScript高级程序设计》中的一个例子，</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">window</span>.color = <span class="hljs-string">"red"</span>;</span><br><span class="line"><span class="hljs-keyword">var</span> o = &#123;<span class="hljs-attr">color</span>: <span class="hljs-string">"blue"</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sayColor</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">   alert(<span class="hljs-keyword">this</span>.color);</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-comment">// "red"</span></span><br><span class="line">sayColor();</span><br><span class="line">o.sayColor = sayColor;</span><br><span class="line"><span class="hljs-comment">// "blue"</span></span><br><span class="line">o.sayColor();</span><br></pre></td></tr></table></figure>
+<p>需要明确的是，函数的名字仅仅是一个包含指针的变量而已。即使是在不同的环境中执行，全局的sayColor()和o.sayColor()指向的仍然是同一个函数。前者在全局作用域调用，因此this指向的是window，因此输出”red”，当把这个函数赋给对象o并调用o.sayColor()时，this引用的是对象o，因此会输出”blue”。再回头看上面的代码，匿名函数在b中执行，并没有附加到任何对象，实际上相当于在window中执行，因此返回this，指向的是window。</p>
+<p>事实上this有那么一条规律，<strong>如果调用函数时是以构造函数的形式，即new函数的形式，this会指向创建的新变量，如果是以普通函数的形式调用，this指向的是全局变量</strong>。还是老样子，用代码说话。</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> Flower = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">name</span>) </span>&#123;<span class="hljs-keyword">this</span>.name = name;&#125;</span><br><span class="line"><span class="hljs-comment">// error</span></span><br><span class="line">alert(name);</span><br><span class="line"><span class="hljs-keyword">var</span> f1 = Flower(<span class="hljs-string">"f1"</span>);</span><br><span class="line"><span class="hljs-comment">// "f1"</span></span><br><span class="line">alert(name);</span><br><span class="line"><span class="hljs-keyword">var</span> f2 = <span class="hljs-keyword">new</span> Flower(<span class="hljs-string">"f2"</span>);</span><br><span class="line"><span class="hljs-comment">// "f1"</span></span><br><span class="line">alert(name);</span><br><span class="line"><span class="hljs-comment">// "f2"</span></span><br><span class="line">alert(f2.name);</span><br></pre></td></tr></table></figure>
+<p>根据这条规律，也可以解释为什么b.testThis为什么指向window，匿名函数在b中执行，是以普通函数的形式被调用，因此this指向的是全局变量，即window。</p>
+<p>既然说到了this，就不得不提call和apply，js中这两个函数用来改变函数所处的上下文，也就是this的指向。例如上面的代码，</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">window</span>.color = <span class="hljs-string">"red"</span>;</span><br><span class="line"><span class="hljs-keyword">var</span> o = &#123;<span class="hljs-attr">color</span>: <span class="hljs-string">"blue"</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sayColor</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">   alert(<span class="hljs-keyword">this</span>.color);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// "blue"</span></span><br><span class="line">sayColor.call(o);</span><br></pre></td></tr></table></figure>
+<p>call和apply用法一样，只是接受的参数不一样，二者第一个参数都代表新的上下文，call接受逗号分隔的各个参数，apply接受数组形式的参数。要注意到，sayColor并不是o的一个方法，但是通过call我们却可以像使用自身的方法一样来调用一个函数，这提供了极大的灵活性，在各大js库中十分常见。</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Javascript/">Javascript</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        
+<div class="sharethis-inline-share-buttons"></div>
+<script type='text/javascript' src='//platform-api.sharethis.com/js/sharethis.js#......' async='async'></script>
+
+        
+    </div>
+</div>
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2016/07/31/简洁高效的Boyer-Moore算法/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">简洁高效的Boyer-Moore算法</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2016/03/25/Oracle中的高水位线/">
+                <span class="level-item">Oracle中的高水位线</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="Javascript中的this" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2018 pingao777&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="http://github.com/ppoffice/hexo-theme-icarus">Icarus</a>
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] },
+        'HTML-CSS': {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+});
+</script>
+
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

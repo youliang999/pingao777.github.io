@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8">
+<title>终于修完Algorithm了 - 瞎说</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+
+
+    <meta name="description" content="磕磕绊绊，终于把Coursera上的Algorithm课修完了，中间有段时间中断了，因为工作太累，下班或者周末实在不愿意面对电脑了。Algorithm这门课整体难度不大，但是课时较长，所以需要能坚持下来。老师在理论和应用上做了比较好的平衡，不会太枯燥，不少习题也都是为了解决现实中的实际问题设计的，这点我非常喜欢，技术最终是为实际应用服务的，纯理论的东西确实提不起兴趣。">
+<meta name="keywords" content="算法,Coursera">
+<meta property="og:type" content="article">
+<meta property="og:title" content="终于修完Algorithm了">
+<meta property="og:url" content="https://pingao777.github.io/2018/12/16/终于修完Algorithm了/index.html">
+<meta property="og:site_name" content="瞎说">
+<meta property="og:description" content="磕磕绊绊，终于把Coursera上的Algorithm课修完了，中间有段时间中断了，因为工作太累，下班或者周末实在不愿意面对电脑了。Algorithm这门课整体难度不大，但是课时较长，所以需要能坚持下来。老师在理论和应用上做了比较好的平衡，不会太枯燥，不少习题也都是为了解决现实中的实际问题设计的，这点我非常喜欢，技术最终是为实际应用服务的，纯理论的东西确实提不起兴趣。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-12-16T13:10:09.502Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="终于修完Algorithm了">
+<meta name="twitter:description" content="磕磕绊绊，终于把Coursera上的Algorithm课修完了，中间有段时间中断了，因为工作太累，下班或者周末实在不愿意面对电脑了。Algorithm这门课整体难度不大，但是课时较长，所以需要能坚持下来。老师在理论和应用上做了比较好的平衡，不会太枯燥，不少习题也都是为了解决现实中的实际问题设计的，这点我非常喜欢，技术最终是为实际应用服务的，纯理论的东西确实提不起兴趣。">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai-sublime.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-44085500-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-44085500-1');
+</script>
+
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body class="is-1-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="终于修完Algorithm了" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-12-16T12:11:32.000Z">2018-12-16</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/技术人生/">技术人生</a>
+                </div>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                终于修完Algorithm了
+            
+        </h1>
+        <div class="content">
+            <p>磕磕绊绊，终于把Coursera上的Algorithm课修完了，中间有段时间中断了，因为工作太累，下班或者周末实在不愿意面对电脑了。Algorithm这门课整体难度不大，但是课时较长，所以需要能坚持下来。老师在理论和应用上做了比较好的平衡，不会太枯燥，不少习题也都是为了解决现实中的实际问题设计的，这点我非常喜欢，技术最终是为实际应用服务的，纯理论的东西确实提不起兴趣。</p>
+<a id="more"></a>
+<p>下面是本次课程的10次作业，</p>
+<ul>
+<li><a href="https://github.com/pingao777/Algorithms/tree/master/src/main/java/com/pingao/assignment/week1" target="_blank" rel="external">Percolation</a></li>
+<li><a href="https://github.com/pingao777/Algorithms/tree/master/src/main/java/com/pingao/assignment/week2" target="_blank" rel="external">Deques and Randomized Queues</a></li>
+<li><a href="https://github.com/pingao777/Algorithms/tree/master/src/main/java/com/pingao/assignment/week3" target="_blank" rel="external">Collinear Points</a></li>
+<li><a href="https://github.com/pingao777/Algorithms/tree/master/src/main/java/com/pingao/assignment/week4" target="_blank" rel="external">8 Puzzle</a></li>
+<li><a href="https://github.com/pingao777/Algorithms/tree/master/src/main/java/com/pingao/assignment/week5" target="_blank" rel="external">Kd-Trees</a></li>
+<li><a href="https://github.com/pingao777/Algorithms/tree/master/src/main/java/com/pingao/assignment/week6" target="_blank" rel="external">WordNet</a></li>
+<li><a href="https://github.com/pingao777/Algorithms/tree/master/src/main/java/com/pingao/assignment/week7" target="_blank" rel="external">Seam Carving</a></li>
+<li><a href="https://github.com/pingao777/Algorithms/tree/master/src/main/java/com/pingao/assignment/week8" target="_blank" rel="external">Baseball Elimination</a></li>
+<li><a href="https://github.com/pingao777/Algorithms/tree/master/src/main/java/com/pingao/assignment/week9" target="_blank" rel="external">Boggle</a></li>
+<li><a href="https://github.com/pingao777/Algorithms/tree/master/src/main/java/com/pingao/assignment/week10" target="_blank" rel="external">Burrows–Wheeler</a></li>
+</ul>
+<p>给我印象最深刻的是第八周的Baseball Elimination，这个作业的大概意思是根据棒球联赛积分表找出哪些球队已经被淘汰，说实话看过体育比赛的对这一点都是有感触的，有时候找出这样的球队不是那么容易，没想到在这里可以使用这么巧妙的一种方法解决，具体方法我就不剧透了。</p>
+<p>这门课虽说修完了，但是自我感觉并不是里面的东西都理解了，甚至可以说是大部分都没有理解，或者说理解的不够深刻，那是不是白学了？肯定不是，我觉得最大的收获就是学到了一些问题有更好的解决方法这个事实，而不是解决方法本身，在上课之前可能某些问题我也知道一些方法，但都是一些笨办法，上完这门课相当于给了我一个更低的上界。总之，用大白话说就是增长了眼界。</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Coursera/">Coursera</a>, <a class="has-link-grey -link" href="/tags/算法/">算法</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        
+<div class="sharethis-inline-share-buttons"></div>
+<script type='text/javascript' src='//platform-api.sharethis.com/js/sharethis.js#......' async='async'></script>
+
+        
+    </div>
+</div>
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/12/03/DrRacket使用技巧总结/">
+                <span class="level-item">DrRacket使用技巧总结</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="终于修完Algorithm了" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2018 pingao777&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="http://github.com/ppoffice/hexo-theme-icarus">Icarus</a>
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] },
+        'HTML-CSS': {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+});
+</script>
+
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

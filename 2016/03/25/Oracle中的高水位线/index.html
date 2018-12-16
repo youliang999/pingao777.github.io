@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8">
+<title>Oracle中的高水位线 - 瞎说</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+
+
+    <meta name="description" content="高水位线(High Water Mark, HWM)类似于一个指针，用来标识分配给段(segment)的块(block)状态。块是Oracle中数据分配和操作的最小单位，段是类似于表、索引这样的数据库实体。块有下面几种状态：  在HWM之上，块是未格式化和未使用的(unformated and unused) 在HWM之下，块又有下面几种状态：  分配的(allocated)，但是还未格式化 格式">
+<meta name="keywords" content="高水位线,Oracle,数据库">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Oracle中的高水位线">
+<meta property="og:url" content="https://pingao777.github.io/2016/03/25/Oracle中的高水位线/index.html">
+<meta property="og:site_name" content="瞎说">
+<meta property="og:description" content="高水位线(High Water Mark, HWM)类似于一个指针，用来标识分配给段(segment)的块(block)状态。块是Oracle中数据分配和操作的最小单位，段是类似于表、索引这样的数据库实体。块有下面几种状态：  在HWM之上，块是未格式化和未使用的(unformated and unused) 在HWM之下，块又有下面几种状态：  分配的(allocated)，但是还未格式化 格式">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-12-16T05:28:43.465Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Oracle中的高水位线">
+<meta name="twitter:description" content="高水位线(High Water Mark, HWM)类似于一个指针，用来标识分配给段(segment)的块(block)状态。块是Oracle中数据分配和操作的最小单位，段是类似于表、索引这样的数据库实体。块有下面几种状态：  在HWM之上，块是未格式化和未使用的(unformated and unused) 在HWM之下，块又有下面几种状态：  分配的(allocated)，但是还未格式化 格式">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai-sublime.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-44085500-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-44085500-1');
+</script>
+
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body class="is-1-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="Oracle中的高水位线" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2016-03-25T01:37:21.000Z">2016-03-25</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/技术人生/">技术人生</a>
+                </div>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Oracle中的高水位线
+            
+        </h1>
+        <div class="content">
+            <p>高水位线(High Water Mark, HWM)类似于一个指针，用来标识分配给段(segment)的块(block)状态。块是Oracle中数据分配和操作的最小单位，段是类似于表、索引这样的数据库实体。块有下面几种状态：</p>
+<ul>
+<li>在HWM之上，块是未格式化和未使用的(unformated and unused)</li>
+<li><p>在HWM之下，块又有下面几种状态：</p>
+<ul>
+<li>分配的(allocated)，但是还未格式化</li>
+<li>格式化并且存有数据</li>
+<li>格式化但是没有数据，delete操作会造成这种状态</li>
+</ul>
+<a id="more"></a>
+</li>
+</ul>
+<p>另有一个低水位线的概念(Low HWM)，处于Low HWM之下的块都是格式化的，处于Low HWM和HWM之间有可能格式化也可能未格式化。<br>示意图如下，<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-- =============================================================</span><br><span class="line">-- &lt;-formated--&gt;Low HWM&lt;----allocated-----&gt;hwm&lt;-----empty----&gt;total</span><br><span class="line">-- ================^========================^===================^</span><br></pre></td></tr></table></figure></p>
+<p>HWM有如下特点：</p>
+<ul>
+<li>一般情况下只升不降，只有在truncate、move、shrink等操作才会降低，delete不会降低，delete后留下的空间，以后insert可以使用。</li>
+<li>执行全表扫描时，数据库扫描Low HWM以下所有的块，不管有没有数据，读取两个水位线之间的块时则要小心一点，因为这中间的块并不一定都是格式化的。如果频繁的删除插入操作，会在HWM下的块中留下大量碎片，影响性能。</li>
+<li>当insert和update的时候，数据库在Low HWM和HWM之间或者Low HWM之下的空余空间进行写入。</li>
+</ul>
+<p>可是为什么要设置一个HWM呢？既然有了一个位图块记录块的状态，为什么要设置一个水位线，全表扫描时还要扫描下面的所有块，而不是那些有数据的？这不是出力不讨好吗，百度了半天，没找到满意的答案，基本上大家都是说“它是这样的”，而没有说“它为什么是这样的”，知道的告诉一声。</p>
+<p>下面是检测表水位线的一个小程序：<br><figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">PROCEDURE P_TABLE_HWM_ANALYSE(TABLE_NAME IN VARCHAR2) IS</span><br><span class="line">    <span class="hljs-comment">-- 表占用空间高水位检测</span></span><br><span class="line">    LVC_TABLE_TMP        VARCHAR2(50);</span><br><span class="line">    LVC_MB               NUMBER; <span class="hljs-comment">-- 表的大小MB</span></span><br><span class="line">    LVC_TOTAL            NUMBER; <span class="hljs-comment">-- 总的block数</span></span><br><span class="line">    LVC_BLOCKS           NUMBER; <span class="hljs-comment">-- 水位线，即hwm</span></span><br><span class="line">    LVC_EMPTY_BLOCKS     NUMBER; <span class="hljs-comment">-- 空余block</span></span><br><span class="line">    LVC_USED             NUMBER; <span class="hljs-comment">-- 使用的block</span></span><br><span class="line">    LVC_USED_PERCENT     NUMBER; <span class="hljs-comment">-- 使用百分比，LVC_USED/LVC_TOTAL</span></span><br><span class="line">    LVC_HWM_PERCENT      NUMBER; <span class="hljs-comment">-- 水位线百分比，LVC_BLOCKS/LVC_TOTAL</span></span><br><span class="line">    LVC_USED_PERCENT_POS NUMBER;</span><br><span class="line">    LVC_HWM_PERCENT_POS  NUMBER;</span><br><span class="line">  <span class="hljs-keyword">BEGIN</span></span><br><span class="line">    LVC_TABLE_TMP := <span class="hljs-keyword">UPPER</span>(TABLE_NAME);</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">EXECUTE</span> <span class="hljs-keyword">IMMEDIATE</span> <span class="hljs-string">'ANALYZE TABLE '</span> || LVC_TABLE_TMP ||</span><br><span class="line">                      <span class="hljs-string">' ESTIMATE STATISTICS'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">ROUND</span>(<span class="hljs-keyword">SUM</span>(<span class="hljs-keyword">DECODE</span>(<span class="hljs-keyword">BYTES</span>, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, <span class="hljs-keyword">BYTES</span>)) / <span class="hljs-number">1024</span> / <span class="hljs-number">1024</span>, <span class="hljs-number">1</span>),</span><br><span class="line">           <span class="hljs-keyword">SUM</span>(<span class="hljs-keyword">DECODE</span>(BLOCKS, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, BLOCKS))</span><br><span class="line">      <span class="hljs-keyword">INTO</span> LVC_MB, LVC_TOTAL</span><br><span class="line">      <span class="hljs-keyword">FROM</span> USER_SEGMENTS</span><br><span class="line">     <span class="hljs-keyword">WHERE</span> SEGMENT_NAME = LVC_TABLE_TMP</span><br><span class="line">     <span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> SEGMENT_NAME;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">DECODE</span>(BLOCKS, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, BLOCKS),</span><br><span class="line">           <span class="hljs-keyword">DECODE</span>(EMPTY_BLOCKS, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, EMPTY_BLOCKS)</span><br><span class="line">      <span class="hljs-keyword">INTO</span> LVC_BLOCKS, LVC_EMPTY_BLOCKS</span><br><span class="line">      <span class="hljs-keyword">FROM</span> USER_TABLES</span><br><span class="line">     <span class="hljs-keyword">WHERE</span> TABLE_NAME = LVC_TABLE_TMP;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">EXECUTE</span> <span class="hljs-keyword">IMMEDIATE</span> <span class="hljs-string">'SELECT COUNT(DISTINCT DBMS_ROWID.ROWID_BLOCK_NUMBER(ROWID)</span></span><br><span class="line"><span class="hljs-string">                        || DBMS_ROWID.ROWID_RELATIVE_FNO(ROWID)) FROM '</span> ||</span><br><span class="line">                      LVC_TABLE_TMP</span><br><span class="line">      <span class="hljs-keyword">INTO</span> LVC_USED;</span><br><span class="line"></span><br><span class="line">    IF LVC_TOTAL = 0 THEN</span><br><span class="line">      LVC_USED_PERCENT := 0;</span><br><span class="line">      LVC_HWM_PERCENT  := 0;</span><br><span class="line">    ELSE</span><br><span class="line">      LVC_USED_PERCENT := ROUND(LVC_USED / LVC_TOTAL * 100);</span><br><span class="line">      LVC_HWM_PERCENT  := ROUND(LVC_BLOCKS / LVC_TOTAL * 100);</span><br><span class="line">    <span class="hljs-keyword">END</span> <span class="hljs-keyword">IF</span>;</span><br><span class="line"></span><br><span class="line">    IF LVC_USED_PERCENT &lt; 6 THEN</span><br><span class="line">      LVC_USED_PERCENT_POS := 3;</span><br><span class="line">    ELSE</span><br><span class="line">      LVC_USED_PERCENT_POS := ROUND(LVC_USED_PERCENT / 2);</span><br><span class="line">    <span class="hljs-keyword">END</span> <span class="hljs-keyword">IF</span>;</span><br><span class="line"></span><br><span class="line">    IF LVC_HWM_PERCENT &lt; 6 THEN</span><br><span class="line">      LVC_HWM_PERCENT_POS := 3;</span><br><span class="line">    ELSE</span><br><span class="line">      LVC_HWM_PERCENT_POS := ROUND(LVC_HWM_PERCENT / 2);</span><br><span class="line">    <span class="hljs-keyword">END</span> <span class="hljs-keyword">IF</span>;</span><br><span class="line">    DBMS_OUTPUT.PUT_LINE(RPAD(LVC_TABLE_TMP || ': ' || LVC_MB || 'MB', 50) ||</span><br><span class="line">                         LPAD('U: Used, H: HWM, T: Total', 52));</span><br><span class="line"></span><br><span class="line">		DBMS_OUTPUT.PUT_LINE(LPAD('=', 102, '='));</span><br><span class="line">    DBMS_OUTPUT.PUT_LINE(LPAD(LVC_USED_PERCENT || '%',</span><br><span class="line">                              LVC_USED_PERCENT_POS));</span><br><span class="line">    DBMS_OUTPUT.PUT_LINE('|' || LPAD('|U', LVC_USED_PERCENT + 2, '-'));</span><br><span class="line">    DBMS_OUTPUT.PUT_LINE(LPAD(LVC_HWM_PERCENT || '%', LVC_HWM_PERCENT_POS));</span><br><span class="line">    DBMS_OUTPUT.PUT_LINE('|' || LPAD('|H', LVC_HWM_PERCENT + 2, '-'));</span><br><span class="line">		DBMS_OUTPUT.PUT_LINE('');</span><br><span class="line">    DBMS_OUTPUT.PUT_LINE(LPAD('T', 103, '='));</span><br><span class="line"></span><br><span class="line">  EXCEPTION</span><br><span class="line">    WHEN OTHERS THEN</span><br><span class="line">      DBMS_OUTPUT.PUT_LINE(LVC_TABLE_TMP || ', ' || SQLERRM);</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">END</span> P_TABLE_HWM_ANALYSE;</span><br></pre></td></tr></table></figure></p>
+<p>测试一下，<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">DM2_LDCX_SY: 10MB                                                            U: Used, H: HWM, T: Total</span><br><span class="line">======================================================================================================</span><br><span class="line">                                         88%</span><br><span class="line">|----------------------------------------------------------------------------------------|U</span><br><span class="line">                                              98%</span><br><span class="line">|--------------------------------------------------------------------------------------------------|H</span><br><span class="line"></span><br><span class="line">======================================================================================================T</span><br></pre></td></tr></table></figure></p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Oracle/">Oracle</a>, <a class="has-link-grey -link" href="/tags/数据库/">数据库</a>, <a class="has-link-grey -link" href="/tags/高水位线/">高水位线</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        
+<div class="sharethis-inline-share-buttons"></div>
+<script type='text/javascript' src='//platform-api.sharethis.com/js/sharethis.js#......' async='async'></script>
+
+        
+    </div>
+</div>
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2016/03/27/Javascript中的this/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Javascript中的this</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2016/03/20/Javascript中的原型/">
+                <span class="level-item">Javascript中的原型</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="Oracle中的高水位线" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2018 pingao777&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="http://github.com/ppoffice/hexo-theme-icarus">Icarus</a>
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] },
+        'HTML-CSS': {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+});
+</script>
+
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

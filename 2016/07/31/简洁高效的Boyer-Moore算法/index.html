@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8">
+<title>简洁高效的Boyer-Moore算法 - 瞎说</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+
+
+    <meta name="description" content="子串检索有着很广泛的应用，例如在文档软件中查找关键词，网站过滤敏感词，生物学家查找某种模式的基因组序列等等，很多人听说过著名的KMP算法，Boyer-Moore算法做到的更多，有迹象表明在某些情况下效率是前者的3-5倍，且实现起来更加简单，符合我简单高效的原则。">
+<meta name="keywords" content="算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简洁高效的Boyer-Moore算法">
+<meta property="og:url" content="https://pingao777.github.io/2016/07/31/简洁高效的Boyer-Moore算法/index.html">
+<meta property="og:site_name" content="瞎说">
+<meta property="og:description" content="子串检索有着很广泛的应用，例如在文档软件中查找关键词，网站过滤敏感词，生物学家查找某种模式的基因组序列等等，很多人听说过著名的KMP算法，Boyer-Moore算法做到的更多，有迹象表明在某些情况下效率是前者的3-5倍，且实现起来更加简单，符合我简单高效的原则。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/%E7%AE%80%E6%B4%81%E9%AB%98%E6%95%88%E7%9A%84Boyer-Moore%E7%AE%97%E6%B3%95/1-random%20string.png">
+<meta property="og:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/%E7%AE%80%E6%B4%81%E9%AB%98%E6%95%88%E7%9A%84Boyer-Moore%E7%AE%97%E6%B3%95/2-repeat%20string.png">
+<meta property="og:updated_time" content="2018-12-16T05:28:43.499Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="简洁高效的Boyer-Moore算法">
+<meta name="twitter:description" content="子串检索有着很广泛的应用，例如在文档软件中查找关键词，网站过滤敏感词，生物学家查找某种模式的基因组序列等等，很多人听说过著名的KMP算法，Boyer-Moore算法做到的更多，有迹象表明在某些情况下效率是前者的3-5倍，且实现起来更加简单，符合我简单高效的原则。">
+<meta name="twitter:image" content="https://wocanmei-hexo.nos-eastchina1.126.net/%E7%AE%80%E6%B4%81%E9%AB%98%E6%95%88%E7%9A%84Boyer-Moore%E7%AE%97%E6%B3%95/1-random%20string.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai-sublime.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-44085500-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-44085500-1');
+</script>
+
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body class="is-1-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="简洁高效的Boyer-Moore算法" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12 has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2016-07-31T13:40:41.000Z">2016-07-31</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/技术人生/">技术人生</a>
+                </div>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                简洁高效的Boyer-Moore算法
+            
+        </h1>
+        <div class="content">
+            <p>子串检索有着很广泛的应用，例如在文档软件中查找关键词，网站过滤敏感词，生物学家查找某种模式的基因组序列等等，很多人听说过著名的<strong>KMP</strong>算法，<strong>Boyer-Moore</strong>算法做到的更多，有迹象表明在某些情况下效率是前者的3-5倍，且实现起来更加简单，符合我简单高效的原则。</p>
+<a id="more"></a>
+<p>下面先抛开算法不谈，如果让你在<code>ABCSAKDFFEHHJDDEFKLD</code>中查找<code>DDEFK</code>，你会怎么做？</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ABCSAKDFFEHHJDDEFKLD</span><br><span class="line">DDEFK</span><br></pre></td></tr></table></figure>
+<p>最直接的就是暴力检索法，挨个比较文本和模式的每个字符，成功就继续比较模式字符的下一个，否则将模式往右移动一位，继续上述过程，直到文本的结尾或者搜索成功，通常情况下效率还可以，因为对于大部分文档往往只需要比较模式中的一两个字符，就会有非匹配字符，因此模式可以快速的向右移动，整体运行时间接近线性。java示例代码为</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">int</span> M = pat.length();</span><br><span class="line"><span class="hljs-keyword">int</span> N = txt.length();</span><br><span class="line"><span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt;= N - M; i++) &#123;</span><br><span class="line">	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; M; j++) &#123;</span><br><span class="line">		<span class="hljs-keyword">if</span> (txt.charAt(i + j) != pat.charAt(j)) &#123;</span><br><span class="line">			<span class="hljs-keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="hljs-keyword">if</span> (j == M - <span class="hljs-number">1</span>) &#123;</span><br><span class="line">			<span class="hljs-keyword">return</span> i;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;</span><br></pre></td></tr></table></figure>
+<p>而本文的主角BM算法可谓别出心裁，它从后往前匹配模式的每一个字符，看看BM算法是如何处理上面的例子的，我们用i表示文本的起始位置，j表示模式中待匹配字符的位置。</p>
+<p>第一步，i=0，j=4，A与K匹配失败，没有必要再往前匹配，i往后移动4+1=5个字符，因为小于这个数字，A都会与模式中的某个字符重叠，而模式中没有这个字符，无论如何都会失败。</p>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">i=<span class="hljs-number">0</span></span><br><span class="line">ABCSAKDFFEFKJDDEFKLD</span><br><span class="line">DDEFK</span><br><span class="line">    j=<span class="hljs-number">4</span></span><br></pre></td></tr></table></figure>
+<p>第二步，i=5，j=4，E与K匹配失败，i需要再次往后移动，这次需要移动几个字符呢，答案是2，这样会将模式中最右边的E与文本中E对齐，小于这个数，文本中E会与模式E右边的字符重叠，这些字符中没有E，因此不可能成功。</p>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">     i=<span class="hljs-number">5</span></span><br><span class="line">ABCSAKDFFEFKJDDEFKLD</span><br><span class="line">     DDEFK</span><br><span class="line">         j=<span class="hljs-number">4</span></span><br></pre></td></tr></table></figure>
+<p>第三步，i=7，j=4，这次匹配成功了，j减一j=3，又成功了，j再减一j=2，又成功了，j再减一j=1，这次F与D没有匹配成功，这次i要移动多少呢，F在文本和模式中都出现了，但是模式中的F已经匹配过了，我们不想让i回退，只能让i简单的加1。</p>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">       i=<span class="hljs-number">7</span></span><br><span class="line">ABCSAKDFFEFKJDDEFKLD</span><br><span class="line">       DDEFK</span><br><span class="line">           j=<span class="hljs-number">4</span></span><br><span class="line">          j=<span class="hljs-number">3</span></span><br><span class="line">         j=<span class="hljs-number">2</span></span><br><span class="line">        j=<span class="hljs-number">1</span></span><br></pre></td></tr></table></figure>
+<p>第四步，i=8，j=4，同样J和K匹配失败，且J不在模式字符串中，同第一步，我们将i移动4+1=5个字符。</p>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">        i=<span class="hljs-number">8</span></span><br><span class="line">ABCSAKDFFEFKJDDEFKLD</span><br><span class="line">        DDEFK</span><br><span class="line">           j=<span class="hljs-number">4</span></span><br></pre></td></tr></table></figure>
+<p>第五步，i=13，k=4，当j=4…0时，每个字符都匹配成功，成功检索到模式，将i=13返回，或者将i的值存储起来继续往后搜索，如果想得到模式的所有位置。</p>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">             i=<span class="hljs-number">13</span></span><br><span class="line">ABCSAKDFFEFKJDDEFKLD</span><br><span class="line">             DDEFK</span><br><span class="line">                 j=<span class="hljs-number">4</span></span><br><span class="line">                j=<span class="hljs-number">3</span></span><br><span class="line">               j=<span class="hljs-number">2</span></span><br><span class="line">              j=<span class="hljs-number">1</span></span><br><span class="line">             j=<span class="hljs-number">0</span></span><br></pre></td></tr></table></figure>
+<p>这样i移动5次，总共比较了12个字符，就完成了查找。</p>
+<p>总结一下，BM算法的策略是从后往前匹配模式中的每个字符，直到文本中出现一个不匹配的字符<code>txt.charAt(i+j)</code>或者检索成功返回i。与暴力检索不同的是，当匹配失败时，BM算法不会按部就班的移动i，它首先会构造一个right数组，数组中存储的是字符集中每个字符在模式中最右边的位置，如果字符不在模式中设为-1，比如上面的例子，</p>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">right[<span class="hljs-string">'D'</span>]=<span class="hljs-number">1</span></span><br><span class="line">right[<span class="hljs-string">'E'</span>]=<span class="hljs-number">2</span></span><br><span class="line">right[<span class="hljs-string">'F'</span>]=<span class="hljs-number">3</span></span><br><span class="line">right[<span class="hljs-string">'K'</span>]=<span class="hljs-number">4</span></span><br></pre></td></tr></table></figure>
+<p>下面是可能出现的三种情形，</p>
+<ul>
+<li><p>当非匹配字符<code>txt.charAt(i+j)</code>不在模式中时，就像上面第一步那样，i需要右移j+1个字符，否则非匹配字符就会与模式字符串的某个字符重叠。</p>
+</li>
+<li><p>当非匹配字符<code>txt.charAt(i+j)</code>是模式中一员时，如上第二步那样，i需要右移<code>j-right[txt.charAt(i+j)]</code>，小于这个步数也会发生重叠。</p>
+</li>
+<li><p>第三种情形其实是第二种情形的补充，虽然非匹配字符<code>txt.charAt(i+j)</code>在模式中，但是已经比较过，这样<code>j-right[txt.charAt(i+j)] &lt; 1</code>，这种情形下只让i简单的右移1位。</p>
+</li>
+</ul>
+<p>这是一段示例代码，</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">public</span> List&lt;Integer&gt; <span class="hljs-title">search</span><span class="hljs-params">(String txt)</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">int</span> N = txt.length();</span><br><span class="line">    <span class="hljs-keyword">int</span> M = pat.length();</span><br><span class="line">    List&lt;Integer&gt; pos = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>, skip = <span class="hljs-number">0</span>; i &lt;= N - M; i += skip) &#123;</span><br><span class="line">        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = M - <span class="hljs-number">1</span>; j &gt;= <span class="hljs-number">0</span>; j--) &#123;</span><br><span class="line">            <span class="hljs-keyword">if</span> (pat.charAt(j) != txt.charAt(i + j)) &#123;</span><br><span class="line">                skip = j - right[txt.charAt(i + j)];</span><br><span class="line">                <span class="hljs-keyword">if</span> (skip &lt; <span class="hljs-number">1</span>) &#123;skip = <span class="hljs-number">1</span>;&#125;</span><br><span class="line">                <span class="hljs-keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="hljs-keyword">if</span> (j == <span class="hljs-number">0</span>) &#123;</span><br><span class="line">                pos.add(i);</span><br><span class="line">                skip = M;</span><br><span class="line">                <span class="hljs-keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> pos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码会找出文本中模式出现的所有位置，在大部分情况下，上面这段代码的运行效率为$O(N/M)$，但是，当文本中包括大量的重复字符时，搜索的效率为$O(NM)$，请看下面的例子，</p>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">txt length: <span class="hljs-number">20</span></span><br><span class="line">pat length: <span class="hljs-number">5</span></span><br><span class="line">--------------------</span><br><span class="line">BBBBBBBBBBBBBBBBBBBB</span><br><span class="line">ABBBB <span class="hljs-comment">#0 0</span></span><br><span class="line"> ABBBB <span class="hljs-comment">#1 5</span></span><br><span class="line">  ABBBB <span class="hljs-comment">#2 10</span></span><br><span class="line">   ABBBB <span class="hljs-comment">#3 15</span></span><br><span class="line">    ABBBB <span class="hljs-comment">#4 20</span></span><br><span class="line">     ABBBB <span class="hljs-comment">#5 25</span></span><br><span class="line">      ABBBB <span class="hljs-comment">#6 30</span></span><br><span class="line">       ABBBB <span class="hljs-comment">#7 35</span></span><br><span class="line">        ABBBB <span class="hljs-comment">#8 40</span></span><br><span class="line">         ABBBB <span class="hljs-comment">#9 45</span></span><br><span class="line">          ABBBB <span class="hljs-comment">#10 50</span></span><br><span class="line">           ABBBB <span class="hljs-comment">#11 55</span></span><br><span class="line">            ABBBB <span class="hljs-comment">#12 60</span></span><br><span class="line">             ABBBB <span class="hljs-comment">#13 65</span></span><br><span class="line">              ABBBB <span class="hljs-comment">#14 70</span></span><br><span class="line">               ABBBB <span class="hljs-comment">#15 75</span></span><br></pre></td></tr></table></figure>
+<p>每一步后面有两个数字，第一个数字表示i移动的次数，后一个表示比较的字符数，如上所示，这个例子i移动了15次，总共比较了75个字符，接近于20*5，效率为$O(NM)$。这不是我们想看到的，为了应对这种情形需要引进另一个数组delta，delta数组中存储的是文本中每个字符最后出现的地方，默认值为模式的长度，这样当遇到非匹配字符<code>txt.charAt(j)</code>时至少<code>delta[pat.charAt(j)]-j</code>这一段是不可能匹配的，因为在文本中这一段没有出现<code>pat.charAt(j)</code>，比较的时候就有了两个移动距离，取其大者。下面是新的代码，</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">public</span> List&lt;Integer&gt; <span class="hljs-title">search</span><span class="hljs-params">(String txt)</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">int</span> N = txt.length();</span><br><span class="line">    <span class="hljs-keyword">int</span> M = pat.length();</span><br><span class="line">    List&lt;Integer&gt; pos = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>, skip = <span class="hljs-number">0</span>; i &lt;= N - M; i += skip) &#123;</span><br><span class="line">        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = M - <span class="hljs-number">1</span>; j &gt;= <span class="hljs-number">0</span>; j--) &#123;</span><br><span class="line">            <span class="hljs-keyword">char</span> c1 = txt.charAt(i + j);</span><br><span class="line">            <span class="hljs-keyword">char</span> c2 = pat.charAt(j);</span><br><span class="line">            delta[c1] = j;</span><br><span class="line">            <span class="hljs-keyword">if</span> (c1 != c2) &#123;</span><br><span class="line">                <span class="hljs-keyword">int</span> skip1 = j - right[c1];</span><br><span class="line">                <span class="hljs-keyword">int</span> skip2 = delta[c2] - j;</span><br><span class="line">                skip = Math.max(skip1, skip2);</span><br><span class="line">                <span class="hljs-keyword">if</span> (skip &lt; <span class="hljs-number">1</span>) &#123;skip = <span class="hljs-number">1</span>;&#125;</span><br><span class="line">                <span class="hljs-keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="hljs-keyword">if</span> (j == <span class="hljs-number">0</span>) &#123;</span><br><span class="line">                pos.add(i);</span><br><span class="line">                skip = M;</span><br><span class="line">                resetDelta();</span><br><span class="line">                <span class="hljs-keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> pos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>每次匹配成功，需要重置delta数组，即上面<code>resetDelta()</code>。将这段代码与上面那一版进行对比，看看有哪些区别。完整代码在<a href="https://github.com/pingao777/Algorithms/blob/master/src/main/java/com/pingao/string/BoyerMoore.java" target="_blank" rel="external">这里</a>，用这一段代码再运行上面的例子，</p>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">txt length: <span class="hljs-number">20</span></span><br><span class="line">pat length: <span class="hljs-number">5</span></span><br><span class="line">--------------------</span><br><span class="line">BBBBBBBBBBBBBBBBBBBB</span><br><span class="line">ABBBB <span class="hljs-comment">#0 0</span></span><br><span class="line">     ABBBB <span class="hljs-comment">#1 5</span></span><br><span class="line">          ABBBB <span class="hljs-comment">#2 10</span></span><br><span class="line">               ABBBB <span class="hljs-comment">#3 15</span></span><br></pre></td></tr></table></figure>
+<p>这次好多了，i移动了3次，只比较了15个字符，就完成了整个检索，算法复杂度基本为线性。好了，算法分析与证明不是那么有意思，最后就以我做的两个实验来结束吧。</p>
+<p><img src="https://wocanmei-hexo.nos-eastchina1.126.net/%E7%AE%80%E6%B4%81%E9%AB%98%E6%95%88%E7%9A%84Boyer-Moore%E7%AE%97%E6%B3%95/1-random%20string.png" alt=""></p>
+<p>横轴为文本长度，纵轴表示比较的字符数，文本和模式从26个大写字母随机生成。可以看到，对于长度为10的模式，BM算法复杂度大约为$O(N/M)$，暴力检索为$O(N)$。</p>
+<p><img src="https://wocanmei-hexo.nos-eastchina1.126.net/%E7%AE%80%E6%B4%81%E9%AB%98%E6%95%88%E7%9A%84Boyer-Moore%E7%AE%97%E6%B3%95/2-repeat%20string.png" alt=""></p>
+<p>与上图不同，这幅图的文本和模式是从4个大写字母随机选择，因此重复率要高的多。可以看到，对于重复率很高的字符串，BM算法效率也能达到$O(N)$，而暴力检索接近$O(NM)$。</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/算法/">算法</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        
+<div class="sharethis-inline-share-buttons"></div>
+<script type='text/javascript' src='//platform-api.sharethis.com/js/sharethis.js#......' async='async'></script>
+
+        
+    </div>
+</div>
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2016/08/17/他们征友（婚）时，他们征什么？/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">他们征友（婚）时，他们征什么？</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2016/03/27/Javascript中的this/">
+                <span class="level-item">Javascript中的this</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="简洁高效的Boyer-Moore算法" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2018 pingao777&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="http://github.com/ppoffice/hexo-theme-icarus">Icarus</a>
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] },
+        'HTML-CSS': {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+});
+</script>
+
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

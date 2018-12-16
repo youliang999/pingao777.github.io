@@ -14,6 +14,10 @@ select,
 textarea {
   font-family: "Ubuntu", "Roboto", "Open Sans", "Microsoft YaHei", sans-serif;
 }
+@font-face {
+  font-family: "Hermit medium";
+  src: url("../libs/hermit-medium.ttf");
+}
 @media screen and (min-width: 1280px) {
   .is-1-column .container,
   .is-2-column .container {
@@ -345,8 +349,8 @@ img.thumbnail {
 }
 .content code,
 .content pre {
-  font-size: 1em;
-  font-family: "Source Code Pro", monospace, "Microsoft YaHei";
+  font-size: 0.85em;
+  font-family: "Hermit medium", "Source Code Pro", monospace, "Microsoft YaHei";
 }
 .content code {
   color: #ff3860;
@@ -391,7 +395,7 @@ figure.highlight figcaption {
 }
 figure.highlight figcaption span {
   font-weight: 500;
-  font-family: "Source Code Pro", monospace, "Microsoft YaHei";
+  font-family: "Hermit medium", "Source Code Pro", monospace, "Microsoft YaHei";
 }
 figure.highlight figcaption a {
   float: right;
